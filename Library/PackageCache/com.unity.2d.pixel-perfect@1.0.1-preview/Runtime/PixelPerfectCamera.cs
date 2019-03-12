@@ -186,10 +186,9 @@ namespace UnityEngine.U2D
 
             RenderTexture activeRT = m_Camera.activeTexture;
             if (activeRT != null)
-                activeRT.filterMode = FilterMode.Point;
+                activeRT.filterMode = m_Internal.useStretchFill ? FilterMode.Bilinear : FilterMode.Point;
 
             m_Camera.pixelRect = m_Internal.CalculatePostRenderPixelRect(m_Camera.aspect, Screen.width, Screen.height);
-            //m_Output = activeRT;
         }
 
 #if UNITY_EDITOR
@@ -234,13 +233,13 @@ namespace UnityEngine.U2D
 
             if (renderResolution.x % 2 != 0 || renderResolution.y % 2 != 0)
             {
-                //string warning = string.Format("Rendering at an odd-numbered resolution ({0} * {1}). Pixel Perfect Camera may not work properly in this situation.", renderResolution.x, renderResolution.y);
-                //GUILayout.Box(warning);
+                string warning = string.Format("Rendering at an odd-numbered resolution ({0} * {1}). Pixel Perfect Camera may not work properly in this situation.", renderResolution.x, renderResolution.y);
+                GUILayout.Box(warning);
             }
 
             if (Screen.width < refResolutionX || Screen.height < refResolutionY)
             {
-                //GUILayout.Box("Screen resolution is smaller than the reference resolution. Image may appear stretched or cropped.");
+                GUILayout.Box("Screen resolution is smaller than the reference resolution. Image may appear stretched or cropped.");
             }
 
             GUI.color = oldColor;

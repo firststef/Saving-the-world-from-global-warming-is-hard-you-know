@@ -7,29 +7,36 @@ using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
-    MapManager gameManagerMap;
     public Sprite[] Sprites;
     public float MoveSpeed = 5f;
     public Slider WaterSlider;
     public Slider WaterLoadSlider;
-    private int Water = 0;
+    public int Water = 0;
     private Vector2 lastMove;
     private bool IsMoving;
     private Rigidbody2D rb;
     private Animator animator;
     public GameObject Water_Bar_Container;
     public int seconds = 0;
+    public int FireNumber;
+    private MapManager gameManagerMap;
+
+    //new
+    public GameObject Fire;
+    public GameObject FireyBoys;
 
     // Start is called before the first frame update
     void Start()
     {
         gameManagerMap = GameObject.Find("GameManagerMap").GetComponent<MapManager>();
-        gameManagerMap.player.SetActive(false);
+        FireNumber = Random.Range(1, 5);
 
         WaterSlider.value = 0;
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         Sprites = Resources.LoadAll<Sprite>("Tileset");
+        for(int i=0; i<FireNumber; i++)
+            Instantiate(Fire, new Vector3((int)Random.Range(-3,4), (int)Random.Range(-3,4), 0), new Quaternion(0,0,0,0), FireyBoys.transform);
     }
 
     // Update is called once per frame
@@ -67,21 +74,24 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    private void Update()
+    void Update()
     {
         if(Input.GetKeyDown(KeyCode.Escape))
         {
-            MapManager.dangerPopupsHolder.SetActive(true);
-            gameManagerMap.player.SetActive(true);
+            //gameManagerMap.DangerPopupsHolder.SetActive(true); // nu merge??
             gameManagerMap.playingMiniGame = false;
-            gameManagerMap.completedMiniGame = true; //asta trebuie pusa doar la castig
+           
+        }
+        if (FireNumber == 0)
+        {
+            gameManagerMap.completedMiniGame = true;
+            Debug.Log("win");
             SceneManager.LoadScene(0);
         }
     }
 
     private void OnTriggerStay2D(Collider2D collider)
     {
-
         if (collider.name == "WaterSupply")
         {
             if (Water < 4)
@@ -95,22 +105,8 @@ public class PlayerController : MonoBehaviour
                 else seconds++;
             }
         }
-        else if(collider.tag == "Fire")
-        {
-            if(Input.GetKeyDown(KeyCode.E))
-            {
-                if (Water > 0)
-                {
-                    collider.gameObject.GetComponent<SpriteRenderer>().sprite = Sprites[455];
-                    Water--;
-                }
-            }
-        }
 
         WaterSlider.value = (float)Water / 4; 
         WaterLoadSlider.value = (float)seconds / 40;
-
-
-        
     }
 }

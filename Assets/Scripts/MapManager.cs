@@ -102,7 +102,7 @@ public class MapManager : MonoBehaviour
         if (playingMiniGame) return;
 
         /////////// Danger Pop-ups
-        if (EventTimer < 300)
+        if (EventTimer < 600)
             EventTimer++;
         else
         {
@@ -120,6 +120,7 @@ public class MapManager : MonoBehaviour
                 location = SetDestination(HighlightName);
                 MovePlayer();
                 dangerPopupsHolder.SetActive(false);
+                player.SetActive(false);
                 playingMiniGame = true;
                 SceneManager.LoadScene(1);
             }
@@ -134,9 +135,9 @@ public class MapManager : MonoBehaviour
             pos.z = 0;
             foreach (Transform child in dangerPopupsHolder.transform)
             {
-                if (child.transform.position == pos) { Destroy(child.gameObject); }
+                if (child.transform.position == pos)
+                { Destroy(child.gameObject); }
             }
-            eventList[(int)location].isActive = false;
             completedMiniGame = false;
         }
     }

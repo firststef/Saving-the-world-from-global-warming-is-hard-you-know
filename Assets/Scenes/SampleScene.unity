@@ -413,7 +413,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 7
+  orthographic size: 5
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -768,11 +768,11 @@ GameObject:
   - component: {fileID: 1127928850}
   - component: {fileID: 1127928849}
   - component: {fileID: 1127928848}
-  - component: {fileID: 1127928853}
   - component: {fileID: 1127928852}
+  - component: {fileID: 1127928853}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Player
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -899,7 +899,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Sprites: []
-  MoveSpeed: 5
+  MoveSpeed: 2
   WaterSlider: {fileID: 908712855}
   WaterLoadSlider: {fileID: 1859079524}
   Water: 0

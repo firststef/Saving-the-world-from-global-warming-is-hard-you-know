@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
+    MapManager gameManagerMap;
     public Sprite[] Sprites;
     public float MoveSpeed = 5f;
     public Slider WaterSlider;
@@ -19,7 +20,6 @@ public class PlayerController : MonoBehaviour
     public GameObject Water_Bar_Container;
     public int seconds = 0;
     public int FireNumber;
-    private MapManager gameManagerMap;
 
     //new
     public GameObject Fire;
@@ -29,14 +29,16 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         gameManagerMap = GameObject.Find("GameManagerMap").GetComponent<MapManager>();
+        gameManagerMap.player.SetActive(false);
+
         FireNumber = Random.Range(1, 5);
 
         WaterSlider.value = 0;
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         Sprites = Resources.LoadAll<Sprite>("Tileset");
-        for(int i=0; i<FireNumber; i++)
-            Instantiate(Fire, new Vector3((int)Random.Range(-3,4), (int)Random.Range(-3,4), 0), new Quaternion(0,0,0,0), FireyBoys.transform);
+        for (int i = 0; i < FireNumber; i++)
+            Instantiate(Fire, new Vector3((int)Random.Range(-3, 4), (int)Random.Range(-3, 4), 0), new Quaternion(0, 0, 0, 0), FireyBoys.transform);
     }
 
     // Update is called once per frame
@@ -60,7 +62,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetAxisRaw("Horizontal") < 0.5 && Input.GetAxisRaw("Horizontal") > -0.5)
         {
             rb.velocity = new Vector2(0, rb.velocity.y);
-           
+
         }
 
         animator.SetBool("IsMoving", IsMoving);
@@ -70,23 +72,19 @@ public class PlayerController : MonoBehaviour
         animator.SetFloat("LastMoveY", lastMove.y);
 
 
-        Water_Bar_Container.transform.position = new Vector3 (GetComponent<Transform>().position.x, GetComponent<Transform>().position.y + 0.4f, Water_Bar_Container.transform.position.z);
+        Water_Bar_Container.transform.position = new Vector3(GetComponent<Transform>().position.x, GetComponent<Transform>().position.y + 0.4f, Water_Bar_Container.transform.position.z);
 
     }
 
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Escape))
-        {
-            //gameManagerMap.DangerPopupsHolder.SetActive(true); // nu merge??
-            gameManagerMap.playingMiniGame = false;
-           
-        }
         if (FireNumber == 0)
         {
             gameManagerMap.completedMiniGame = true;
-            Debug.Log("win");
+            gameManagerMap.playingMiniGame = false;
             SceneManager.LoadScene(0);
+            gameManagerMap.player.SetActive(true);
+            MapManager.dangerPopupsHolder.SetActive(true);
         }
     }
 
@@ -106,7 +104,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        WaterSlider.value = (float)Water / 4; 
+        WaterSlider.value = (float)Water / 4;
         WaterLoadSlider.value = (float)seconds / 40;
     }
 }

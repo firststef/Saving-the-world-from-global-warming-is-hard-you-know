@@ -28,7 +28,7 @@ public class ObjectButtonScript : MonoBehaviour
 
     public void OnClick()
     {
-        if (gameManager.currentAction == 3) gameManager.selectUpgrade(holdingTile);
+        if (gameManager.currentAction == 4) gameManager.selectUpgrade(holdingTile);
 
         gameManager.selectedConstruction = holdingTile;
 
@@ -37,22 +37,13 @@ public class ObjectButtonScript : MonoBehaviour
 
     public void OnEventClick()
     {
-        gameManager.selectedConstruction = holdingTile;
+        gameManager.selectedConstruction = null; //poate functiona si cu evenimente goale
 
         tabMenuScript.showEventOptions(holdingTile);
     }
 
     public void OnEventOptionButtonClick(int buttonIndex)
     {
-        switch (buttonIndex)
-        {
-            case 1:
-                //de legat cu CustomTile
-                break;
-            case 2:
-                break;
-            case 3:
-                break;
-        }
+        gameManager.ResolveEventOption(holdingTile, buttonIndex);
     }
 }

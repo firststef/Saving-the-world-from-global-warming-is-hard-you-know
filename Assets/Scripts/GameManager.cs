@@ -3,10 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
     //////////////////////////////////////////////////// MAP INITIALIZATION
+    public MouseController mouseController;
     public Tilemap tilemap;
     private BoundsInt bounds;
 
@@ -23,30 +25,42 @@ public class GameManager : MonoBehaviour
     z = 9 for UI 
     */
 
-    //////////////////////////////////////////////////// TILE DATABASE
-    [Serializable] public class DatabaseItem
-    { 
+    //////////////////////////////////////////////////// DATABASE
+    [Serializable]
+    public class DatabaseItem
+    {
         [SerializeField] public CustomTile tile;
         public int instances;
         public List<Vector3Int> locations;
-    }
+    };
     [Serializable]
     public class DatabaseItemBase : DatabaseItem
     {
         [SerializeField] public List<DatabaseItem> upgrades;
-    }
+    };
     [Serializable]
     public class DatabaseItemEvent
     {
         [SerializeField] public CustomTile tile;
         public int instances;
-        public List <Vector3Int> locations;
-        
-    }
+        public List<Vector3Int> locations;
+    };
+    [Serializable]
+    public class DatabaseItemRequirement
+    {
+        [SerializeField] public CustomTile tile;
+        public string variable;
+        public string title;
+        public string description;
+        public int amount;
+        public bool completed = false;
+    };
     [Space]
-    public List <DatabaseItemBase> tileDatabase;
+    public List<DatabaseItemBase> tileDatabase;
     [Space]
-    public List <DatabaseItemEvent> eventDatabase;
+    public List<DatabaseItemEvent> eventDatabase;
+    [Space]
+    public List<DatabaseItemRequirement> requirementsDatabase;
     [Space]
 
     //////////////////////////////////////////////////// UI OPTIONS
@@ -56,15 +70,16 @@ public class GameManager : MonoBehaviour
     public bool DragIsEnabled = true;
 
     private TabMenuScript tabMenuScript;
-    
+
     //////////////////////////////////////////////////// GAME STATES
     public int currentAction = 1;
     /*
     Action 0 Idle 
-    Action 1 Build selected
-    Action 2 Destroy selected
-    Action 3 Construction Upgrade / Event Menu selected
-    Action 4 Events
+    Action 1 Requirements
+    Action 2 Build selected
+    Action 3 Destroy selected
+    Action 4 Construction Upgrade / Event Menu selected
+    Action 5 Events
     */
     public CustomTile selectedConstruction;
     public Vector3Int selectedCell; //-might have to add stack of selected cells
@@ -80,7 +95,7 @@ public class GameManager : MonoBehaviour
 
 
 
-     
+
 
 
 
@@ -90,6 +105,9 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        //////// INITIALIZATION
+        mouseController = GetComponent<MouseController>();
+
         //////// MAP INITIALIZATION
         tilemap.CompressBounds();
         bounds = tilemap.cellBounds;
@@ -103,7 +121,7 @@ public class GameManager : MonoBehaviour
 
     public void GameTimeUpdate()
     {
-        gameTime += 1;
+        gameTime += 1;// de facut o functie care converteste gametime in zile
     }
 
     void Update()
@@ -113,7 +131,7 @@ public class GameManager : MonoBehaviour
     }
 
 
-   
+
 
 
     /// Polution Update
@@ -152,28 +170,34 @@ public class GameManager : MonoBehaviour
                 {
                     if (tileAbove.type == CustomTile.Type.Construction) //&& construction is upgradable
                     {
-                        currentAction = 3;
                         tabMenuScript.selectUpgrade();
                     }
                     break;
                 }
             case 1:
+                break;
+            case 2:
                 {
-                    if (tileAbove.type == CustomTile.Type.Ground  && selectedConstruction!=null) //gotta add if enough money
+                    if (tileAbove.type == CustomTile.Type.Ground && selectedConstruction != null)
                     {
-                        GetComponent<MouseController>().deleteCursor();
+                        if (Budget >= selectedConstruction.costForAction) //poate verificarea ar trebui sa fie facute de CustomTile
+                        {
+                            GetComponent<MouseController>().deleteCursor();
 
-                        //sets and logs in the database
-                        tilemap.SetTile(new Vector3Int(cell.x, cell.y, selectedConstruction.zPos), selectedConstruction);
+                            //sets and logs in the database
+                            tilemap.SetTile(new Vector3Int(cell.x, cell.y, selectedConstruction.zPos), selectedConstruction);
 
-                        //lets the tile do something specific at instantiation
-                        selectedConstruction.OnInstantiate(new Vector3Int(cell.x, cell.y, selectedConstruction.zPos));
-
-
+                            //lets the tile do something specific at instantiation
+                            selectedConstruction.OnInstantiate(new Vector3Int(cell.x, cell.y, selectedConstruction.zPos));
+                        }
+                        else
+                        {
+                            mouseController.CreatePopupWindow();
+                        }
                     }
                     break;
                 }
-            case 2:
+            case 3:
                 {
                     if (tileAbove.type == CustomTile.Type.Construction)
                     {
@@ -185,11 +209,11 @@ public class GameManager : MonoBehaviour
                     }
                     break;
                 }
-            case 3:
+            case 4:
                 {
                     if (tileAbove.type == CustomTile.Type.Construction)
                     {
-                        selectedConstruction = ReturnTileAbove(cell,0);
+                        selectedConstruction = ReturnTileAbove(cell, 0);
                     }
                     else
                     {
@@ -207,13 +231,13 @@ public class GameManager : MonoBehaviour
         CustomTile construction = ReturnTileAbove(pos, 0);
 
         //if is allowed
-        if (!UpgradeIsValid(construction,upgrade)) return;
+        if (!UpgradeIsValid(construction, upgrade) && upgrade.costForAction > Budget) return;
 
         //delete old tile
         construction.OnDelete(pos);
 
         //instantiate the new one
-        tilemap.SetTile(pos,upgrade);
+        tilemap.SetTile(pos, upgrade);
         upgrade.OnInstantiate(pos);
     }
 
@@ -234,7 +258,7 @@ public class GameManager : MonoBehaviour
                 bool foundConstr = false;
                 foreach (DatabaseItem datTile in tileList)
                 {
-                    if (foundConstr && datTile.tile == upgrade ) return true;
+                    if (foundConstr && datTile.tile == upgrade) return true;
                     if (datTile.tile == construction) foundConstr = true;
                 }
             }
@@ -242,16 +266,114 @@ public class GameManager : MonoBehaviour
         return false;
     }
 
-    public CustomTile ReturnTileAbove (Vector3Int cell, int position)
+    public CustomTile ReturnTileAbove(Vector3Int cell, int position)
     {
         CustomTile aux = null;
-        for (int z=8; z >= -1 && position >= 0;z--)
+        for (int z = 8; z >= -1 && position >= 0; z--)
         {
             aux = tilemap.GetTile<CustomTile>(new Vector3Int(cell.x, cell.y, z));
-            if (aux!=null)
+            if (aux != null)
                 position--;
         }
         return aux;
     }
+     
+    public int retVariableForRequirement(string name)
+    {
+        switch (name)
+        {
+            case "Budget":
+                    return Budget;
+            case "Revenue":
+                return revenue;
+        }
+        return 0;
+    }
 
+    public int retVariableForRequirement(CustomTile tile)
+    {
+        foreach (DatabaseItemBase databaseItem in tileDatabase)
+        {
+            if (databaseItem.tile == tile)
+            {
+                return databaseItem.instances;
+            }
+            foreach (DatabaseItem tileu in databaseItem.upgrades)
+            {
+                if (tileu.tile == tile)
+                {
+                    return tileu.instances;
+                }
+            }
+        }
+        return 0;
+    }
+
+    public void ResolveEventOption (CustomTile customTile, int button)
+    {
+        int ok = 1;
+
+        List<CustomTile.Demand> listDem = null;
+        if (button == 1)
+            listDem = customTile.demands1;
+        else if (button == 2)
+            listDem = customTile.demands2;
+        else if (button == 3)
+            goto skip3;
+        foreach (CustomTile.Demand demand in listDem)
+        {
+            int stock = 0;
+            if (demand.ctile != null) stock = retVariableForRequirement(demand.ctile);
+            else if (demand.variable != null) stock = retVariableForRequirement(demand.variable);
+            else return; 
+
+            if (stock < demand.amount) ok = 0;
+        }
+
+        if (ok == 0) return; //window log not enough suplies
+
+        foreach (CustomTile.Demand demand in listDem)
+        {
+            if (demand.ctile != null)
+            {
+                int newValue = retVariableForRequirement(demand.ctile) - demand.amount;
+
+                foreach (DatabaseItemBase databaseItem in tileDatabase)
+                {
+                    if (databaseItem.tile == demand.ctile)
+                    {
+                        for (int i = databaseItem.instances-1; i>= 0 && i>=newValue; i--)
+                        {
+                            databaseItem.tile.OnDelete(databaseItem.locations[i]);
+                        }
+                    }
+                    foreach (DatabaseItem tileu in databaseItem.upgrades)
+                    {
+                        for (int i = tileu.instances - 1; i >= 0 && i>=newValue; i--)
+                        {
+                            tileu.tile.OnDelete(tileu.locations[i]);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                switch (demand.variable) //ar merge o functie de optimizare aici ceva gen ret_variable (string, modify 0);
+                {
+                    case "Budget":
+                        Budget += demand.amount;
+                        break;
+                    case "Revenue":
+                        revenue += demand.amount;
+                        break;
+                }
+            }
+        }
+
+        skip3:
+        eventDatabase.Remove(eventDatabase.Find(ev => ev.tile == customTile));
+        GameObject.Find("EventsHolder").GetComponent<ObjectHolderScript>().listUpToDate = false;
+        tabMenuScript.selectEvents();
+        return;
+    }
 }

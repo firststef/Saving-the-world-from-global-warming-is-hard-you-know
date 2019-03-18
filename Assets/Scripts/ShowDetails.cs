@@ -46,6 +46,7 @@ public class ShowDetails : MonoBehaviour
 
     private CustomTile GetShowTile ()
     {
+        //as putea face if current action 5 si este peste un buton de event care are un tile afiseaza optiunea
         if (mouseController.checkIfOverUI())
         {
             PointerEventData ped = new PointerEventData(null);
@@ -56,20 +57,26 @@ public class ShowDetails : MonoBehaviour
             foreach (RaycastResult result in results)
             {
                 script = result.gameObject.GetComponent<ObjectButtonScript>();
-                if (script != null) break;
+                if (script != null && gameManager.currentAction != 5) break;
             }
-            if (script != null) return script.holdingTile; 
+            if (script != null) return script.holdingTile;
+            if (gameManager.selectedConstruction != null)
+            {
+                return gameManager.selectedConstruction;
+            }
+            return null;
         }
         if (gameManager.selectedConstruction != null)
         {
             return gameManager.selectedConstruction;
         }
-        else return gameManager.ReturnTileAbove(mouseController.currentCell, 0);
+        return gameManager.ReturnTileAbove(mouseController.currentCell, 0);
     }
 
     private void UpdateDetailsData()
     {
-        details.text = currentTile.name;
+        detailsTitle.text = currentTile.name;
+        details.text = currentTile.description;
     }
 
     private void EraseDetailsData()

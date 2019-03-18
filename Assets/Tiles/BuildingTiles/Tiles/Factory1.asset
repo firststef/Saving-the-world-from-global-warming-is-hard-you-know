@@ -38,3 +38,4 @@ MonoBehaviour:
   type: 2
   polutionNumber: 4
   revenueNumber: 5
+  costForAction: 20

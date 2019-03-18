@@ -10,26 +10,37 @@ using UnityEngine.UI;
 
 public class MouseController : MonoBehaviour
 {
+    private GameManager gameManager;
+    private Tilemap tilemap;
+
+    //////////////////////////// UI
+    private GameObject canvas;
+    private GameObject menuPanel;
+    public GameObject windowPrefab = null;
+    public List<GameObject> windowList;
+    private bool panelUp = true;
+    private float hideY;
+
+    ///////////////// Event UI
     public GameObject eventPopupPrefab = null;
     private bool cellEventPopupActive = false;
     private GameObject eventPopup;
     private Vector3Int currentCellEvent;
-    private GameObject canvas;
-    private GameObject menuPanel;
 
-    private GameManager gameManager;
-    private Tilemap tilemap;
+    ///////////////// Drag and Zoom
+    private Vector3 lastMousePosition;
+    private Vector3 currentMousePosition;
     private float originalOrthographicSize;
     private Vector3 cameraLimitBottomLeftCorner;
     private Vector3 cameraLimitTopRightCorner;
-    private Vector3 lastMousePosition;
-    private Vector3 currentMousePosition;
-    public Vector3Int currentCell;
+
     private float mouseScrollSpeed = 6f;
+
+    ///////////////// Current position
+    public Vector3Int currentCell;
     private Tile selectionTile;
     private int selectionTileHeight = 5;
     private Vector3Int lastTile;
-    private bool panelUp = true;
 
     void Start()
     {
@@ -53,9 +64,8 @@ public class MouseController : MonoBehaviour
         currentCell = tilemap.WorldToCell(Camera.main.ScreenToWorldPoint(Input.mousePosition));
 
         //Bail out if over UI
-        float hideY = 3 * Camera.main.orthographicSize / originalOrthographicSize;
-        if (checkIfOverUI()) {deleteCursor(); if (!panelUp) { menuPanel.transform.Translate(0, hideY, 0); panelUp = true; } return; }
-        else { if (panelUp) { menuPanel.transform.Translate(0, -hideY, 0); panelUp = false; } }
+        hideY = 3 * Camera.main.orthographicSize / originalOrthographicSize;
+        if (checkIfOverUI()) {deleteCursor(); return; }
 
         //Selection move
         if (gameManager.SelectionIsEnabled) moveCursor();
@@ -122,6 +132,20 @@ public class MouseController : MonoBehaviour
         {
             Destroy(eventPopup);
             cellEventPopupActive = false;
+        }
+    }
+
+    public void HideshowMenu(bool state)
+    {
+        if (panelUp)
+        {
+               menuPanel.transform.Translate(0, -hideY, 0);
+            panelUp = false;
+        }
+        else
+        {
+            menuPanel.transform.Translate(0, hideY, 0);
+            panelUp = true;
         }
     }
 
@@ -193,5 +217,11 @@ public class MouseController : MonoBehaviour
             if ((v2.y <= v1.y && v1.y <= v3.y) || (v2.y >= v1.y && v1.y >= v3.y))
                 return true;
         return false;
+    }
+
+    public void CreatePopupWindow()
+    {
+        GameObject w = Instantiate(windowPrefab, canvas.transform);
+        windowList.Add(w);
     }
 }

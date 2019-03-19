@@ -30,6 +30,8 @@ public class GameManager : MonoBehaviour
     public class DatabaseItem
     {
         [SerializeField] public CustomTile tile;
+        public bool unlocked;
+        public Sprite picture;
         public int instances;
         public List<Vector3Int> locations;
     };
@@ -84,7 +86,25 @@ public class GameManager : MonoBehaviour
     public CustomTile selectedConstruction;
     public Vector3Int selectedCell; //-might have to add stack of selected cells
     //////////////////////////////////////////////////// GAME VARIABLES
-    public int gameTime;
+    public float gameTime;
+
+    [Serializable]
+    public class Clock
+    {
+        public int day = 1;
+        public int month = 1;
+        public int year = 2019;
+    };
+
+    public Clock StartDate;
+    public Clock EndDate;
+
+    public Clock CurrentDate;
+
+    public int TimeForClear = 10;
+    public float TimePerBeat = 1;
+    public Text date;
+
 
     public int polutionRate = 0;
     public int Polution = 0;
@@ -92,16 +112,6 @@ public class GameManager : MonoBehaviour
 
     public int revenue = 0;
     public int Budget = 0;
-
-
-
-
-
-
-
-
-
-
 
     void Start()
     {
@@ -117,11 +127,8 @@ public class GameManager : MonoBehaviour
 
         //////// GAME VARIABLES
         InvokeRepeating("GameTimeUpdate", 0, 1);
-    }
-
-    public void GameTimeUpdate()
-    {
-        gameTime += 1;// de facut o functie care converteste gametime in zile
+        SetTimer();
+        InvokeRepeating("DateIncrease", 0, TimePerBeat);
     }
 
     void Update()
@@ -130,12 +137,40 @@ public class GameManager : MonoBehaviour
         BudgetUpdate();
     }
 
+    public void GameTimeUpdate()
+    {
+        gameTime += 1;
+        if (gameTime >= TimeForClear)
+            Debug.Log(CheckResults()); //window log win/lose
+    }
 
+    void SetTimer()
+    {
+        int numOfDays = DaysDifference(StartDate, EndDate);
+        TimePerBeat = (float)TimeForClear / numOfDays;
+    }
 
+    int DaysDifference(Clock a, Clock b)
+    {
+        int Y = a.year;
+        int M = a.month;
+        int D = a.day;
+        long adays = (1461 * (Y + 4800 + (M - 14) / 12)) / 4 + (367 * (M - 2 - 12 * ((M - 14) / 12))) / 12 - (3 * ((Y + 4900 + (M - 14) / 12) / 100)) / 4 + D - 32075;
+        Y = b.year;
+        M = b.month;
+        D = b.day;
+        long bdays = (1461 * (Y + 4800 + (M - 14) / 12)) / 4 + (367 * (M - 2 - 12 * ((M - 14) / 12))) / 12 - (3 * ((Y + 4900 + (M - 14) / 12) / 100)) / 4 + D - 32075;
+        return (int)Mathf.Abs(bdays - adays);
+    }
 
+    public void DateIncrease()
+    {
+        CurrentDate.day++; // de facut algoritm
+        date.text = CurrentDate.day + "." + CurrentDate.month + "." + CurrentDate.year;
+    }
 
     /// Polution Update
-    int lastPolutionTimeUpdate = 0;
+    float lastPolutionTimeUpdate = 0;
     int polutionUpdateRate = 4;
     private void PolutionUpdate()
     {
@@ -147,7 +182,7 @@ public class GameManager : MonoBehaviour
     }
 
     /// Budget Update
-    int lastBudgetTimeUpdate = 0;
+    float lastBudgetTimeUpdate = 0;
     int budgetUpdateRate = 6;
     private void BudgetUpdate()
     {
@@ -231,7 +266,7 @@ public class GameManager : MonoBehaviour
         CustomTile construction = ReturnTileAbove(pos, 0);
 
         //if is allowed
-        if (!UpgradeIsValid(construction, upgrade) && upgrade.costForAction > Budget) return;
+        if (!UpgradeIsValid(construction, upgrade) || upgrade.costForAction > Budget) return;
 
         //delete old tile
         construction.OnDelete(pos);
@@ -371,9 +406,18 @@ public class GameManager : MonoBehaviour
         }
 
         skip3:
-        eventDatabase.Remove(eventDatabase.Find(ev => ev.tile == customTile));
+        eventDatabase.Remove(eventDatabase.Find(ev => ev.tile == customTile)); //trebuie sa sterg evenimentul - sa pun add cell in on instantiate?
         GameObject.Find("EventsHolder").GetComponent<ObjectHolderScript>().listUpToDate = false;
         tabMenuScript.selectEvents();
         return;
+    }
+
+    public bool CheckResults()
+    {
+        foreach (DatabaseItemRequirement req in requirementsDatabase)
+        {
+            if (!req.completed) return false;
+        }
+        return true;
     }
 }

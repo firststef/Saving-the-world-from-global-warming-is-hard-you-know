@@ -34,5 +34,5 @@ MonoBehaviour:
     m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Size: {x: 1, y: 1, z: 1}
   m_Pivot: {x: 0, y: 0, z: 0}
-  customTile: {fileID: 11400000, guid: b2980c54b44531f479b140a2d9c3aaac, type: 2}
+  customTile: {fileID: 11400000, guid: bae7f34cd5cdbd24e9476d84710417fd, type: 2}
   z: 2

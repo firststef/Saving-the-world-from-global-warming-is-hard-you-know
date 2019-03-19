@@ -75,7 +75,7 @@ public class ShowDetails : MonoBehaviour
 
     private void UpdateDetailsData()
     {
-        detailsTitle.text = currentTile.name;
+        detailsTitle.text = (currentTile.displayName == "") ? currentTile.name :currentTile.displayName;
         details.text = currentTile.description;
     }
 

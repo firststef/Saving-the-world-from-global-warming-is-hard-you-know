@@ -37,7 +37,7 @@ public class ObjectButtonScript : MonoBehaviour
 
     public void OnEventClick()
     {
-        gameManager.selectedConstruction = null; //poate functiona si cu evenimente goale
+        gameManager.selectedConstruction = null;
 
         tabMenuScript.showEventOptions(holdingTile);
     }

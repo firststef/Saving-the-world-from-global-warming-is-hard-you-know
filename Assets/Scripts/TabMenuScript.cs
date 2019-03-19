@@ -33,7 +33,7 @@ public class TabMenuScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (gameManager.currentAction == 0 && reset != 0) { resetButtons(); selectRequirements(); }
+        if (gameManager.currentAction == 0 && reset != 0) { resetButtons(); selectRequirements(); gameManager.currentAction = 0; }
     }
 
     private void resetButtons()

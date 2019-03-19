@@ -20,6 +20,7 @@ namespace UnityEngine.Tilemaps
     {
         private GameManager gameManager = null;
 
+        public string displayName;
         public int zPos = 0;
 
         [Serializable] public enum Type
@@ -81,9 +82,13 @@ namespace UnityEngine.Tilemaps
                     }
                     else
                     {
-                        
-                        datItem.upgrades.Find(dT => dT.tile == this).instances++;
-                        datItem.upgrades.Find(dT => dT.tile == this).locations.Add(cell);
+
+                        GameManager.DatabaseItem up = datItem.upgrades.Find(dT => dT.tile == this);
+                        if (up != null)
+                        {
+                            up.instances++;
+                            up.locations.Add(cell);
+                        }
 
                     }
                 }
@@ -124,17 +129,20 @@ namespace UnityEngine.Tilemaps
             {
                 foreach (GameManager.DatabaseItemBase datItem in gameManager.tileDatabase)
                 {
-                    if (this == datItem.tile)
+                    if (datItem.tile == this)
                     {
                         datItem.instances--;
                         datItem.locations.Remove(cell);
                     }
                     else
                     {
-                         
-                        datItem.upgrades.Find(dT => dT.tile == this).instances--;
-                        datItem.upgrades.Find(dT => dT.tile == this).locations.Remove(cell);
-                      
+                        GameManager.DatabaseItem up = datItem.upgrades.Find(dT => dT.tile == this);
+                        if (up != null)
+                        {
+                            up.instances--;
+                            up.locations.Remove(cell);
+                        }
+
                     }
                 }
             }
@@ -178,6 +186,8 @@ namespace UnityEngine.Tilemaps
         public override void OnInspectorGUI()
         {
             EditorGUI.BeginChangeCheck();
+
+            tile.displayName= (string)EditorGUILayout.TextField("Display Name", tile.displayName);
 
             tile.sprite = (Sprite)EditorGUILayout.ObjectField("Sprite ", tile.sprite, typeof(Sprite), false, null);
 

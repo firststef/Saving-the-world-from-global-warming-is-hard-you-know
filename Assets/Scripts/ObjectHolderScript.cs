@@ -40,13 +40,19 @@ public class ObjectHolderScript : MonoBehaviour
         {
             foreach (GameManager.DatabaseItemBase databaseItem in tileDatabase)
             {
-                CustomTile tile = databaseItem.tile;
-                GameObject instance = Instantiate(objectButton, transform);
-                instance.name = "ObjectButton=>" + tile.name;
-                instance.GetComponent<ObjectButtonScript>().holdingTile = tile;
-                instance.transform.GetChild(0).GetComponent<Image>().sprite = tile.sprite;
-                listUpToDate = true;
+                if (databaseItem.unlocked)
+                {
+                    CustomTile tile = databaseItem.tile;
+                    GameObject instance = Instantiate(objectButton, transform);
+                    instance.name = "ObjectButton=>" + tile.name;
+                    instance.GetComponent<ObjectButtonScript>().holdingTile = tile;
+                    if (databaseItem.picture != null)
+                        instance.transform.GetChild(0).GetComponent<Image>().sprite = databaseItem.picture;
+                    else
+                        instance.transform.GetChild(0).GetComponent<Image>().sprite = tile.sprite;
+                }
             }
+            listUpToDate = true;
             return;
         }
         else if (List == "Upgrades")
@@ -74,12 +80,18 @@ public class ObjectHolderScript : MonoBehaviour
                     {
                         if ((fromTheStart || foundNextUpgrade) && tileu != null)
                         {
-                            GameObject instance = Instantiate(objectButton, transform);
-                            instance.name = "ObjectButton=>" + tileu.tile.name;
-                            instance.GetComponent<ObjectButtonScript>().holdingTile = tileu.tile;
-                            instance.transform.GetChild(0).GetComponent<Image>().sprite = tileu.tile.sprite;
+                            if (tileu.unlocked)
+                            {
+                                GameObject instance = Instantiate(objectButton, transform);
+                                instance.name = "ObjectButton=>" + tileu.tile.name;
+                                instance.GetComponent<ObjectButtonScript>().holdingTile = tileu.tile;
+                                if (tileu.picture != null)
+                                    instance.transform.GetChild(0).GetComponent<Image>().sprite = tileu.picture;
+                                else
+                                    instance.transform.GetChild(0).GetComponent<Image>().sprite = tileu.tile.sprite;
+                            }
+                            if (tileu.tile == currentTileUpgrade && !foundNextUpgrade) foundNextUpgrade = true;
                         }
-                        if (tileu.tile == currentTileUpgrade && !foundNextUpgrade) foundNextUpgrade = true;
                     }
                 }
             }

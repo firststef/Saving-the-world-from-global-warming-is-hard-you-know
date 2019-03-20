@@ -4,6 +4,7 @@ C:/Users/Stefan/Desktop/loggertest/Logger 2D-Top-Down-Puzzle-RPGish.exe
 SceneListBegin?
 Assets/Scenes/WorldMap.unity
 Assets/Scenes/SampleScene.unity
+Assets/Scenes/Penguin Rescue.unity
 SceneListEnd?
 984dcc0ba3707b7691fbdca8ff508d28 Unity.TextMeshPro.dll:TMPro.TMP_SelectionCaret
 01aa15e337e3a9c62f15153dfac6d589 Unity.TextMeshPro.dll:TMPro.TMP_Dropdown
@@ -162,3 +163,7 @@ d791aa6007fa3640be1164ea75bb087d Unity.TextMeshPro.dll:TMPro.TMP_StyleSheet
 c6666661329916e218bee7f5e79e60f5 Unity.TextMeshPro.dll:TMPro.TextMeshPro
 3165968ba45c74472d279ba04455fccb Unity.TextMeshPro.dll:TMPro.TMP_ColorGradient
 8649814970b42d345b89944b862453cc Unity.TextMeshPro.dll:TMPro.TMP_SubMesh
+dab42f658f87ba6fa08e156327a29b09 Assembly-CSharp.dll:.PlayerController2
+a97441578e0467c393311c0d95c6ed7f Assembly-CSharp.dll:.IceBreaking
+5392b0bb5eaa3afca8d383a4fd3202c1 Assembly-CSharp.dll:.TargetIndicator
+71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:.BenguinController

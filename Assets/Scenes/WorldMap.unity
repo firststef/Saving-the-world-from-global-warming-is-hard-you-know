@@ -612,7 +612,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1133879071
 GameObject:
@@ -691,7 +691,7 @@ Transform:
   m_LocalScale: {x: 0.1, y: 0.1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1147821260
 GameObject:
@@ -728,7 +728,7 @@ Transform:
   - {fileID: 690260547}
   - {fileID: 488045761}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1403370007
 GameObject:
@@ -1304,7 +1304,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1740579973
 MonoBehaviour:
@@ -1329,19 +1329,19 @@ MonoBehaviour:
   completedMiniGame: 0
   eventList:
   - isActive: 0
-    position: {x: 355, y: 210, z: 0}
+    position: {x: 0.136, y: 0.096, z: 0}
   - isActive: 0
-    position: {x: 498, y: 255, z: 0}
+    position: {x: 0.513, y: 0.207, z: 0}
   - isActive: 0
-    position: {x: 475.5, y: 175, z: 0}
+    position: {x: 0.474, y: -0.038, z: 0}
   - isActive: 0
-    position: {x: 359, y: 127, z: 0}
+    position: {x: 0.065, y: -0.19, z: 0}
   - isActive: 0
-    position: {x: 167.5, y: 183, z: 0}
+    position: {x: -0.616, y: -0.026, z: 0}
   - isActive: 0
-    position: {x: 259, y: 314, z: 0}
+    position: {x: -0.27, y: 0.344, z: 0}
   - isActive: 0
-    position: {x: 235.5, y: 86, z: 0}
+    position: {x: -0.371, y: -0.31, z: 0}
   location: 0
 --- !u!1 &1785542194
 GameObject:

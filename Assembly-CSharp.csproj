@@ -60,11 +60,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\FireController.cs" />
-    <Compile Include="Assets\Scripts\GameManager.cs" />
-    <Compile Include="Assets\Scripts\HighlightScript.cs" />
-    <Compile Include="Assets\Scripts\MapManager.cs" />
-    <Compile Include="Assets\Scripts\PlayerController.cs" />
+    <Compile Include="Assets\CarAi.cs" />
+    <Compile Include="Assets\Scripts\Benguin Level\BenguinController.cs" />
+    <Compile Include="Assets\Scripts\Benguin Level\IceBreaking.cs" />
+    <Compile Include="Assets\Scripts\Benguin Level\PlayerController2.cs" />
+    <Compile Include="Assets\Scripts\Benguin Level\TargetIndicator.cs" />
+    <Compile Include="Assets\Scripts\CarMovement.cs" />
+    <Compile Include="Assets\Scripts\FireLevel\FireController.cs" />
+    <Compile Include="Assets\Scripts\FireLevel\PlayerController.cs" />
+    <Compile Include="Assets\Scripts\MapMenu\HighlightScript.cs" />
+    <Compile Include="Assets\Scripts\MapMenu\MapManager.cs" />
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>D:/stefan/Projects/Logger 2D-Top-Down-Puzzle-RPGish/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>

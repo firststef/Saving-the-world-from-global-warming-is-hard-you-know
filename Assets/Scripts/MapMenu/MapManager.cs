@@ -118,11 +118,11 @@ public class MapManager : MonoBehaviour
             if ((int)SetDestination(HighlightName) < eventList.Count && eventList[(int)SetDestination(HighlightName)].isActive)
             {
                 location = SetDestination(HighlightName);
-                MovePlayer();
-                dangerPopupsHolder.SetActive(false);
                 playingMiniGame = true;
-                SceneManager.LoadScene(1);
-                IsClicked = false;
+                StartCoroutine(FlyingAnimation());
+
+                //MovePlayer();
+                return;
             }
         }
         if (Input.GetMouseButtonUp(0))
@@ -131,11 +131,11 @@ public class MapManager : MonoBehaviour
         /////////// If mini-game was completed, erase Dangerbutton
         if (completedMiniGame)
         {
-            Vector3 pos = Camera.main.ScreenToWorldPoint(eventList[(int)location].position);
+            Vector3 pos = eventList[(int)location].position;
             pos.z = 0;
             foreach (Transform child in dangerPopupsHolder.transform)
             {
-                if (child.transform.position == pos) { Destroy(child.gameObject); }
+                if (child.transform.position == pos) { Destroy(child.gameObject); activeEvents--; }
             }
             eventList[(int)location].isActive = false;
             completedMiniGame = false;
@@ -165,14 +165,37 @@ public class MapManager : MonoBehaviour
         }
     }
 
+    private IEnumerator FlyingAnimation()
+    {
+        Vector3 start = player.transform.position;
+        Vector3 dest = eventList[(int)location].position;
+        Vector3 pos;
+
+        for (int i = 0; i <= 100; i++)
+        {
+            pos.x = (dest.x * i + start.x * (100 - i))/100;
+            pos.y = (dest.y * i + start.y * (100 - i))/100;
+            pos.z = 0;
+
+            player.transform.position = pos;
+            yield return new WaitForSeconds(0.01f);
+        }
+       
+            dangerPopupsHolder.SetActive(false);
+            
+            SceneManager.LoadScene(1);
+            IsClicked = false;
+    }
+
+    /*
     private void MovePlayer()
     {
-        Vector3 pos = Camera.main.ScreenToWorldPoint(eventList[(int)location].position);
+        Vector3 pos = eventList[(int)location].position;
         pos.z = 0;
         pos.y -= 0.06f;
         player.transform.position = pos;
     }
-
+    */
     void CreateRandomEvent()
     {
         while (true)
@@ -181,7 +204,7 @@ public class MapManager : MonoBehaviour
             if (eventList[index].isActive == false)
             {
                 eventList[index].isActive = true;
-                Vector3 pos = Camera.main.ScreenToWorldPoint(eventList[index].position);
+                Vector3 pos = eventList[index].position;
                 pos.z = 0;
                 GameObject instance = Instantiate(dangerSprite, pos, new Quaternion(0, 0, 0, 0),dangerPopupsHolder.transform);
                 

@@ -24,6 +24,8 @@ public class PlayerController : MonoBehaviour
     //new
     public GameObject Fire;
     public GameObject FireyBoys;
+    public List<Transform> FirePositions;
+    private int[] ChosenPos;
 
     // Start is called before the first frame update
     void Start()
@@ -31,14 +33,27 @@ public class PlayerController : MonoBehaviour
         gameManagerMap = GameObject.Find("GameManagerMap").GetComponent<MapManager>();
         gameManagerMap.player.SetActive(false);
 
-        FireNumber = Random.Range(1, 5);
-
         WaterSlider.value = 0;
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         Sprites = Resources.LoadAll<Sprite>("Tileset");
+
+        FireNumber = Random.Range(1, 8);
+        ChosenPos = new int[8];
+
         for (int i = 0; i < FireNumber; i++)
-            Instantiate(Fire, new Vector3((int)Random.Range(-3, 4), (int)Random.Range(-3, 4), 0), new Quaternion(0, 0, 0, 0), FireyBoys.transform);
+        {
+            while (true)
+            {
+                int pos = Random.Range(1, 8);
+                if (ChosenPos[pos] == 0)
+                {
+                    Instantiate(Fire, FirePositions[pos].position, new Quaternion(0, 0, 0, 0), FireyBoys.transform);
+                    ChosenPos[pos] = 1;
+                    break;
+                }
+            }
+        }
     }
 
     // Update is called once per frame

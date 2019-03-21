@@ -8,7 +8,8 @@ using UnityEngine.UI;
 public class PlayerController : MonoBehaviour
 {
     MapManager gameManagerMap;
-    public Sprite[] Sprites;
+
+    public Sprite[] Sprites; //trebuie sa scot odata tileset-ul asta
     public float MoveSpeed = 5f;
     public Slider WaterSlider;
     public Slider WaterLoadSlider;
@@ -20,8 +21,6 @@ public class PlayerController : MonoBehaviour
     public GameObject Water_Bar_Container;
     public int seconds = 0;
     public int FireNumber;
-
-    //new
     public GameObject Fire;
     public GameObject FireyBoys;
     public List<Transform> FirePositions;
@@ -30,9 +29,11 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //Pre-Level
         gameManagerMap = GameObject.Find("GameManagerMap").GetComponent<MapManager>();
         gameManagerMap.player.SetActive(false);
 
+        //Level
         WaterSlider.value = 0;
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();

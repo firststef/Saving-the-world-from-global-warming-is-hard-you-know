@@ -2,17 +2,26 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.SceneManagement;
 
 public class PlayerController2 : MonoBehaviour
 {
+    private MapManager gameManagerMap;
     public Tilemap tilemap;
+    private Vector3 cameraLimitBottomLeftCorner;
+    private Vector3 cameraLimitTopRightCorner;
+    Vector3 limitBottomLeft;
+    Vector3 limitTopRight;
+
     private Rigidbody2D rb;
     private Animator animator;
     private bool IsMoving;
     private Vector2 lastMove;
     public float MoveSpeed = 0.2f;
-    public int BenguinNumber;
 
+    public int BenguinNumber;
+    public int[] ChosenPos;
+    public Transform[] BenguinPositions;
     public GameObject Benguin;
     public GameObject Benguins;
     public GameObject Arrow;
@@ -20,15 +29,44 @@ public class PlayerController2 : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //Pre-level 
+        gameManagerMap = GameObject.Find("GameManagerMap").GetComponent<MapManager>();
+        gameManagerMap.player.SetActive(false);
+
+        //BoundsCalculations
+        tilemap.CompressBounds();
+        BoundsInt bounds = tilemap.cellBounds;
+        cameraLimitBottomLeftCorner = tilemap.CellToWorld(new Vector3Int(bounds.xMin, bounds.yMin, bounds.zMin));
+        cameraLimitTopRightCorner = tilemap.CellToWorld(new Vector3Int(bounds.xMax, bounds.yMax, bounds.zMax - 1));
+        limitBottomLeft = cameraLimitBottomLeftCorner;
+        limitTopRight = cameraLimitTopRightCorner;
+        var top = Camera.main.orthographicSize;
+        var left = top * Camera.main.aspect;
+        limitBottomLeft.x += left;
+        limitBottomLeft.y += top;
+        limitTopRight.x -= left;
+        limitTopRight.y -= top;
+
+        //Level
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
 
         BenguinNumber = (int)Random.Range(1, 4);
-        for(int i=0; i<BenguinNumber; i++)
+        ChosenPos = new int[7];
+        for (int i = 0; i < BenguinNumber; i++)
         {
-            GameObject benguin = Instantiate(Benguin, new Vector3((int)Random.Range(-10, 11), (int)Random.Range(-10, 11), 0), new Quaternion(0, 0, 0, 0), Benguins.transform);
-            GameObject arrow = Instantiate(Arrow, gameObject.transform);
-            arrow.GetComponent<TargetIndicator>().Target = benguin.transform;
+            while (true)
+            {
+                int pos = Random.Range(1, 7);
+                if (ChosenPos[pos] == 0)
+                {
+                    GameObject benguin = Instantiate(Benguin, BenguinPositions[pos].position, new Quaternion(0, 0, 0, 0), Benguins.transform);
+                    ChosenPos[pos] = 1;
+                    GameObject arrow = Instantiate(Arrow, gameObject.transform);
+                    arrow.GetComponent<TargetIndicator>().Target = benguin.transform;
+                    break;
+                }
+            }
         }
     }
 
@@ -43,25 +81,52 @@ public class PlayerController2 : MonoBehaviour
             lastMove.x = Input.GetAxisRaw("Horizontal");
             rb.AddForce(new Vector2(Input.GetAxisRaw("Horizontal") * MoveSpeed, Input.GetAxisRaw("Vertical") * MoveSpeed));
         }
-        
 
         animator.SetBool("IsMoving", IsMoving);
         animator.SetFloat("MoveY", Input.GetAxisRaw("Vertical"));
         animator.SetFloat("MoveX", Input.GetAxisRaw("Horizontal"));
         animator.SetFloat("LastMoveX", lastMove.x);
         animator.SetFloat("LastMoveY", lastMove.y);
+
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    private void LateUpdate()
     {
-        Debug.Log("Hello");
+        Vector3 feetPosition = transform.position;
+        feetPosition.y -= (float)0.48;
+        Vector3Int currentCell = tilemap.WorldToCell(feetPosition);
+        currentCell.z = 0;
+        if (tilemap.GetTile(currentCell) == null)
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+
+        BenguinController bc = GameObject.FindObjectOfType<BenguinController>();
+        if (BenguinNumber == 0 && ((bc != null) ? bc.isNearExit() : true))
+        {
+            gameManagerMap.completedMiniGame = true;
+            gameManagerMap.playingMiniGame = false;
+            SceneManager.LoadScene(0);
+            gameManagerMap.player.SetActive(true);
+            MapManager.dangerPopupsHolder.SetActive(true);
+        }
+
+        CameraLocation();
     }
 
-    private void OnTriggerExit2D(Collider2D other)
+    private void CameraLocation()
     {
-        Debug.Log("Hello2");
-        Vector3Int pos = tilemap.WorldToCell(GameObject.Find("Player").transform.position);
-        pos.z = 0;
-        tilemap.SetTile(pos, null);
+        Vector3 pos = transform.position;
+        pos.z = Camera.main.transform.position.z;
+        if (!(limitBottomLeft.x <= pos.x && pos.x <= limitTopRight.x) && !(limitBottomLeft.x >= pos.x && pos.x >= limitTopRight.x))
+        {
+            pos.x = Camera.main.transform.position.x;
+        }
+        if (!(limitBottomLeft.y <= pos.y && pos.y <= limitTopRight.y) && !(limitBottomLeft.y >= pos.y && pos.y >= limitTopRight.y))
+        {
+            pos.y = Camera.main.transform.position.y;
+        }
+        Camera.main.transform.Translate(pos - Camera.main.transform.position);
     }
+
 }

@@ -9,15 +9,16 @@ public class BenguinController : MonoBehaviour
     private GameObject exit;
     private bool isPicked;
     private int index;
-    private PlayerController2 cont;
+    private PlayerController2 controller;
 
     // Start is called before the first frame update
     void Start()
     {
         exit = GameObject.Find("Exit");
         player = GameObject.Find("Player");
-        cont = player.GetComponent<PlayerController2>();
+        controller = player.GetComponent<PlayerController2>();
         isPicked = false;
+       
     }
 
     // Update is called once per frame
@@ -30,9 +31,16 @@ public class BenguinController : MonoBehaviour
             if(isNearExit())
             {
                 //Destroy(this); distrug asta si sageata
-
-                if (cont.BenguinNumber == 0)
-                    SceneManager.LoadScene(0);//minigame complete
+                foreach (Transform child in controller.gameObject.transform)
+                {
+                    TargetIndicator tg = child.GetComponent<TargetIndicator>();
+                    if (tg != null && tg.Target == this)
+                    {
+                        tg.gameObject.SetActive(false);
+                        Destroy(tg.gameObject);
+                    }
+                }
+                Destroy(gameObject);
             }
         }
         else
@@ -46,13 +54,13 @@ public class BenguinController : MonoBehaviour
         if (Mathf.Abs(player.transform.position.x - transform.position.x) <= 1 && Mathf.Abs(player.transform.position.y - transform.position.y) <= 1)
         {
             isPicked = true;
-            index = 2-cont.BenguinNumber;
-            cont.BenguinNumber--;
+            index = 2-controller.BenguinNumber;
+            controller.BenguinNumber--;
             return;
         }
     }
 
-    private bool isNearExit()
+    public bool isNearExit()
     {
         if (Mathf.Abs(exit.transform.position.x - transform.position.x) <= 1 && Mathf.Abs(exit.transform.position.y - transform.position.y) <= 1)
             return true;

@@ -7,8 +7,7 @@ public class FireController : MonoBehaviour
     private GameObject player;
     private PlayerController cont;
     private SpriteRenderer spr;
-    private int lol;
-    private bool isLit;
+    private bool isLit = true;
 
 
     void Start()
@@ -16,8 +15,6 @@ public class FireController : MonoBehaviour
         player = GameObject.Find("Player");
         cont = player.GetComponent<PlayerController>();
         spr = GetComponent<SpriteRenderer>();
-        isLit = true;
-        lol = 0;
 
     }
 
@@ -25,25 +22,19 @@ public class FireController : MonoBehaviour
     {
         if (isLit)
         {
-            if (lol / 100 == 0)
-                spr.sprite = cont.Sprites[456];
-            else if (lol / 100 == 1)
-                spr.sprite = cont.Sprites[457];
-            else lol = 0;
-            lol++;
             isNearPlayer();
         }
     }
 
     private void isNearPlayer()
     {
-        if (Mathf.Abs(player.transform.position.x - transform.position.x) <= 1 && Mathf.Abs(player.transform.position.y - transform.position.y) <= 1)
+        if (Mathf.Abs(player.transform.position.x - transform.position.x) <= 1.5 && Mathf.Abs(player.transform.position.y - transform.position.y) <= 1.5)
         {
             if (Input.GetKeyDown(KeyCode.E))
             {
                 if (cont.Water > 0)
                 {
-                    spr.sprite = cont.Sprites[455];
+                    GetComponent<Animator>().SetBool("FireExtinguished", true);
                     cont.Water--;
                     isLit = false;
                     cont.FireNumber--;

@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class TargetIndicator : MonoBehaviour
 {
-    // Start is called before the first frame update
     public Transform Target;
     public float HideDistance;
     private Vector3 dir;
@@ -21,10 +20,12 @@ public class TargetIndicator : MonoBehaviour
             SetChildrenActive(false);
         else
             SetChildrenActive(true);
-
-        dir = Target.position - transform.parent.transform.position;
-        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+        if (Target != null)
+        {
+            dir = Target.position - transform.parent.transform.position;
+            float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+            transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+        }
     }
 
     void SetChildrenActive(bool value)

@@ -23,6 +23,7 @@ public class MapManager : MonoBehaviour
     public GameObject player;
     public GameObject dangerSprite;
     public static GameObject dangerPopupsHolder;
+    public Sprite plane;
     private int activeEvents = 0;
     public string HighlightName = null;
     private bool IsClicked = false;
@@ -30,6 +31,7 @@ public class MapManager : MonoBehaviour
     ////////// Between scenes
     public bool playingMiniGame = false;
     public bool completedMiniGame = false;
+    private int LastGame = -1;
 
     [Serializable]
     public class Event
@@ -103,11 +105,20 @@ public class MapManager : MonoBehaviour
 
         /////////// Danger Pop-ups
         if (EventTimer < 300)
+        {
             EventTimer++;
+            if (activeEvents == 0)
+                dangerPoints -= Time.deltaTime * 6;
+            if (dangerPoints < 0) dangerPoints = 0;
+        }
         else
         {
             EventTimer = 0;
-            if (activeEvents < eventList.Count) { CreateRandomEvent(); activeEvents++; }
+
+            if (activeEvents < eventList.Count)
+            {
+                CreateRandomEvent(); activeEvents++;
+            }
         }
 
         /////////// On-click - Move to mini-game
@@ -117,11 +128,21 @@ public class MapManager : MonoBehaviour
 
             if ((int)SetDestination(HighlightName) < eventList.Count && eventList[(int)SetDestination(HighlightName)].isActive)
             {
-                location = SetDestination(HighlightName);
                 playingMiniGame = true;
-                StartCoroutine(FlyingAnimation());
-
-                //MovePlayer();
+                if (location != SetDestination(HighlightName))
+                {
+                    location = SetDestination(HighlightName);
+                    playingMiniGame = true;
+                    StartCoroutine(FlyingAnimation());
+                }
+                else
+                {
+                    location = SetDestination(HighlightName);
+                    player.transform.position = eventList[(int)location].position;
+                    dangerPopupsHolder.SetActive(false);
+                    SceneManager.LoadScene(GetGameFromLocation());
+                    IsClicked = false;
+                }
                 return;
             }
         }
@@ -167,24 +188,41 @@ public class MapManager : MonoBehaviour
 
     private IEnumerator FlyingAnimation()
     {
+        Sprite spr = player.GetComponent<SpriteRenderer>().sprite;
+        player.GetComponent<SpriteRenderer>().sprite = plane;
+
+        Vector3 dir = eventList[(int)location].position - transform.position;
+        float angle = 90-(1/Mathf.Atan2(dir.y, dir.x)) * Mathf.Rad2Deg;
+        player.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+
         Vector3 start = player.transform.position;
         Vector3 dest = eventList[(int)location].position;
         Vector3 pos;
 
         for (int i = 0; i <= 100; i++)
         {
-            pos.x = (dest.x * i + start.x * (100 - i))/100;
-            pos.y = (dest.y * i + start.y * (100 - i))/100;
+            pos.x = (dest.x * i + start.x * (100 - i)) / 100;
+            pos.y = (dest.y * i + start.y * (100 - i)) / 100;
             pos.z = 0;
 
             player.transform.position = pos;
             yield return new WaitForSeconds(0.01f);
         }
-       
-            dangerPopupsHolder.SetActive(false);
-            
-            SceneManager.LoadScene(1);
-            IsClicked = false;
+
+        player.GetComponent<SpriteRenderer>().sprite = spr;
+        player.transform.rotation = new Quaternion(0,0,0,0);
+
+        dangerPopupsHolder.SetActive(false);
+
+        SceneManager.LoadScene(GetGameFromLocation());
+        IsClicked = false;
+    }
+
+    int GetGameFromLocation()
+    {
+        if (location == Continents.America) return 1;
+        if (location == Continents.Greenland) return 2;
+        return 1;
     }
 
     /*
@@ -200,7 +238,12 @@ public class MapManager : MonoBehaviour
     {
         while (true)
         {
-            int index = (int)UnityEngine.Random.Range(0, 7);
+            int index = LastGame;
+            while (index == LastGame) //folosit ca sa nu fie jucat de 2 ori acelasi nivel consecutiv
+            {
+                index = UnityEngine.Random.Range(0, 7);
+            }
+            LastGame = index;
             if (eventList[index].isActive == false)
             {
                 eventList[index].isActive = true;

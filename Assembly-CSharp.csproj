@@ -60,11 +60,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\CarAi.cs" />
     <Compile Include="Assets\Scripts\Benguin Level\BenguinController.cs" />
     <Compile Include="Assets\Scripts\Benguin Level\IceBreaking.cs" />
     <Compile Include="Assets\Scripts\Benguin Level\PlayerController2.cs" />
     <Compile Include="Assets\Scripts\Benguin Level\TargetIndicator.cs" />
+    <Compile Include="Assets\Scripts\CarAi.cs" />
     <Compile Include="Assets\Scripts\CarMovement.cs" />
     <Compile Include="Assets\Scripts\FireLevel\FireController.cs" />
     <Compile Include="Assets\Scripts\FireLevel\PlayerController.cs" />

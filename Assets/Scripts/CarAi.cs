@@ -9,7 +9,6 @@ public class CarAi : MonoBehaviour
     private int current = 0;
     private Rigidbody2D rb;
 
-    private int k;
     private Vector3 pos;
 
     private void Start()
@@ -20,13 +19,10 @@ public class CarAi : MonoBehaviour
 
     void Update()
     {
-        k++;
-        //rb.MoveRotation(k);
-        if (transform.position != target[current] && Vector3.Distance(transform.position, target[current]) > 0.05)
+        if (transform.position != target[current] && Vector3.Distance(transform.position, target[current]) > 0.03)
         {
-            Vector3 pos = Vector3.MoveTowards(transform.position, target[current], speed * Time.deltaTime);
+            pos = Vector3.MoveTowards(transform.position, target[current], speed * Time.deltaTime);
             rb.MovePosition(pos);
-
 
         }
         else

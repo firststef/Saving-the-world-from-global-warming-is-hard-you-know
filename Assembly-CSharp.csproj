@@ -70,6 +70,12 @@
     <Compile Include="Assets\Scripts\FireLevel\PlayerController.cs" />
     <Compile Include="Assets\Scripts\MapMenu\HighlightScript.cs" />
     <Compile Include="Assets\Scripts\MapMenu\MapManager.cs" />
+    <Compile Include="Assets\Scripts\Sokoban\Box.cs" />
+    <Compile Include="Assets\Scripts\Sokoban\GameManager.cs" />
+    <Compile Include="Assets\Scripts\Sokoban\LevelBuilder.cs" />
+    <Compile Include="Assets\Scripts\Sokoban\Levels.cs" />
+    <Compile Include="Assets\Scripts\Sokoban\Player.cs" />
+    <None Include="Assets\Resources\MazeLevels.txt" />
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>D:/stefan/Projects/Logger 2D-Top-Down-Puzzle-RPGish/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>

@@ -4,10 +4,9 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Fire
-  - DangerPopupsHolder
-  - Canvas
-  - GameManagerMap
+  - Box
+  - Wall
+  - Cross
   layers:
   - Default
   - TransparentFX

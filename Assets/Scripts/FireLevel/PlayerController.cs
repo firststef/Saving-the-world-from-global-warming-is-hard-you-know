@@ -39,7 +39,7 @@ public class PlayerController : MonoBehaviour
         animator = GetComponent<Animator>();
         Sprites = Resources.LoadAll<Sprite>("Tileset");
 
-        FireNumber = Random.Range(1, 8);
+        FireNumber = Random.Range(1, 6);
         ChosenPos = new int[8];
 
         for (int i = 0; i < FireNumber; i++)
@@ -101,6 +101,7 @@ public class PlayerController : MonoBehaviour
             SceneManager.LoadScene(0);
             gameManagerMap.player.SetActive(true);
             MapManager.dangerPopupsHolder.SetActive(true);
+            gameManagerMap.gameProgress.SetActive(true);
         }
     }
 

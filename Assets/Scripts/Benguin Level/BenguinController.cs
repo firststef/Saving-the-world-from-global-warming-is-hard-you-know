@@ -8,8 +8,9 @@ public class BenguinController : MonoBehaviour
     private GameObject player;
     private GameObject exit;
     private bool isPicked;
-    private int index;
+    private float index;
     private PlayerController2 controller;
+    private int total_benguins;
 
     // Start is called before the first frame update
     void Start()
@@ -18,7 +19,7 @@ public class BenguinController : MonoBehaviour
         player = GameObject.Find("Player");
         controller = player.GetComponent<PlayerController2>();
         isPicked = false;
-       
+        total_benguins = controller.BenguinNumber;
     }
 
     // Update is called once per frame
@@ -54,7 +55,7 @@ public class BenguinController : MonoBehaviour
         if (Mathf.Abs(player.transform.position.x - transform.position.x) <= 1 && Mathf.Abs(player.transform.position.y - transform.position.y) <= 1)
         {
             isPicked = true;
-            index = 2-controller.BenguinNumber;
+            index = (float)(1- total_benguins)/2 + total_benguins - controller.BenguinNumber;
             controller.BenguinNumber--;
             return;
         }
@@ -62,7 +63,7 @@ public class BenguinController : MonoBehaviour
 
     public bool isNearExit()
     {
-        if (Mathf.Abs(exit.transform.position.x - transform.position.x) <= 1 && Mathf.Abs(exit.transform.position.y - transform.position.y) <= 1)
+        if (Mathf.Abs(exit.transform.position.x - transform.position.x) <= 0.5 && Mathf.Abs(exit.transform.position.y - transform.position.y) <= 0.5)
             return true;
         return false;
     }

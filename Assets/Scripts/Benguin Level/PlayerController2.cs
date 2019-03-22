@@ -25,6 +25,7 @@ public class PlayerController2 : MonoBehaviour
     public GameObject Benguin;
     public GameObject Benguins;
     public GameObject Arrow;
+    public GameObject exit;
 
     // Start is called before the first frame update
     void Start()
@@ -101,13 +102,14 @@ public class PlayerController2 : MonoBehaviour
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
 
-        BenguinController bc = GameObject.FindObjectOfType<BenguinController>();
-        if (BenguinNumber == 0 && ((bc != null) ? bc.isNearExit() : true))
+        bool isNearExit = (Mathf.Abs(exit.transform.position.x - transform.position.x) <= 0.5 && Mathf.Abs(exit.transform.position.y - transform.position.y) <= 0.5);
+        if (BenguinNumber == 0 && isNearExit)
         {
             gameManagerMap.completedMiniGame = true;
             gameManagerMap.playingMiniGame = false;
             SceneManager.LoadScene(0);
             gameManagerMap.player.SetActive(true);
+            gameManagerMap.gameProgress.SetActive(true);
             MapManager.dangerPopupsHolder.SetActive(true);
         }
 

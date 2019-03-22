@@ -14,10 +14,14 @@ public class MapManager : MonoBehaviour
     ////////// Game progress
     public static Image dangerBar;
     private Image dangerBarContent;
+    public GameObject gameProgress;
 
     public float dangerPoints;
     public float maximumDanger = 300;
     public int EventTimer =0;
+
+    public int totalGames = 10;
+    public int wonGames = 0;
 
     ////////// Map objects
     public GameObject player;
@@ -27,6 +31,7 @@ public class MapManager : MonoBehaviour
     private int activeEvents = 0;
     public string HighlightName = null;
     private bool IsClicked = false;
+    public Text progressText;
 
     ////////// Between scenes
     public bool playingMiniGame = false;
@@ -56,7 +61,11 @@ public class MapManager : MonoBehaviour
 
     // Start is called before the first frame update
     void Start()
-    { 
+    {
+        ///Pre-start
+        progressText.text = wonGames + " / " + totalGames;
+
+        ///On Restart
         if (gameManagerMap == null)
         {
             DontDestroyOnLoad(this.gameObject);
@@ -85,7 +94,11 @@ public class MapManager : MonoBehaviour
         foreach (GameObject canvasgo in GameObject.FindGameObjectsWithTag("Canvas"))
         {
             count++;
-            if (count == 1) { dangerBar = canvasgo.transform.GetChild(0).GetComponent<Image>(); DontDestroyOnLoad(canvasgo); }
+            if (count == 1)
+            {
+                dangerBar = canvasgo.transform.GetChild(0).GetComponent<Image>(); DontDestroyOnLoad(canvasgo);
+                //GameObject gameProgress = canvasgo.transform.GetChild(1);
+            }
             if (count >= 2) Destroy(canvasgo);
         }
 
@@ -140,6 +153,7 @@ public class MapManager : MonoBehaviour
                     location = SetDestination(HighlightName);
                     player.transform.position = eventList[(int)location].position;
                     dangerPopupsHolder.SetActive(false);
+                    gameProgress.SetActive(false);
                     SceneManager.LoadScene(GetGameFromLocation());
                     IsClicked = false;
                 }
@@ -159,6 +173,10 @@ public class MapManager : MonoBehaviour
                 if (child.transform.position == pos) { Destroy(child.gameObject); activeEvents--; }
             }
             eventList[(int)location].isActive = false;
+
+            wonGames++;
+            progressText.text = wonGames + " / " + totalGames;
+
             completedMiniGame = false;
         }
     }
@@ -213,6 +231,7 @@ public class MapManager : MonoBehaviour
         player.transform.rotation = new Quaternion(0,0,0,0);
 
         dangerPopupsHolder.SetActive(false);
+        gameProgress.SetActive(false);
 
         SceneManager.LoadScene(GetGameFromLocation());
         IsClicked = false;

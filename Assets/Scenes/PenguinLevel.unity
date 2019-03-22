@@ -8193,6 +8193,7 @@ MonoBehaviour:
   Benguin: {fileID: 8985735149479754592, guid: b707a4e484e708a45bb6de772151e6f4, type: 3}
   Benguins: {fileID: 701637694}
   Arrow: {fileID: 869639074461611667, guid: 8e1a1af3944b2d7419d5adca8f7db8d8, type: 3}
+  exit: {fileID: 1483095524}
 --- !u!61 &968539588
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -8335,12 +8336,12 @@ EdgeCollider2D:
   m_Offset: {x: 0, y: 0}
   m_EdgeRadius: 0
   m_Points:
-  - {x: 10.709469, y: 6.672066}
+  - {x: 10.732831, y: 6.942252}
   - {x: 10.791941, y: 6.3464327}
   - {x: 10.654949, y: -8.527019}
   - {x: -14.54837, y: -8.718588}
-  - {x: -14.497, y: 6.746251}
-  - {x: 10.71525, y: 6.6906047}
+  - {x: -14.523944, y: 6.9347563}
+  - {x: 10.739227, y: 6.9439316}
 --- !u!4 &971928652
 Transform:
   m_ObjectHideFlags: 0

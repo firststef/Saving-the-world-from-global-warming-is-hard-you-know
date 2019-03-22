@@ -75,7 +75,7 @@
     <Compile Include="Assets\Scripts\Sokoban\LevelBuilder.cs" />
     <Compile Include="Assets\Scripts\Sokoban\Levels.cs" />
     <Compile Include="Assets\Scripts\Sokoban\Player.cs" />
-    <None Include="Assets\Resources\MazeLevels.txt" />
+    <None Include="Assets\Resources\Sokoban\MazeLevels.txt" />
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>D:/stefan/Projects/Logger 2D-Top-Down-Puzzle-RPGish/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>

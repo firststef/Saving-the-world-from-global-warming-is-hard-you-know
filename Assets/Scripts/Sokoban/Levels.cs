@@ -29,7 +29,7 @@ public class Levels : MonoBehaviour
 
     void Awake()
     {
-        TextAsset ta = (TextAsset)Resources.Load(filename);
+        TextAsset ta = (TextAsset)Resources.Load("Sokoban/"+filename);
         if (!ta)
         {
             Debug.Log("No");

@@ -16,6 +16,7 @@ public class LevelBuilder : MonoBehaviour
     private Level m_Level;
     private int LevelNumber;
     public GameManager gm;
+    public Sprite valid;
 
     GameObject GetPrefab(char c)
     {
@@ -42,7 +43,8 @@ public class LevelBuilder : MonoBehaviour
                     gm.NumberOfCrosses++;
                 if (prefab)
                 {
-                    Instantiate(prefab, new Vector3(x, y, 0), Quaternion.identity);
+                    GameObject go = Instantiate(prefab, new Vector3(x, y, 0), Quaternion.identity);
+                    if (go.GetComponent<Box>()) go.GetComponent<Box>().valid = valid;
                 }
                 x++;
             }

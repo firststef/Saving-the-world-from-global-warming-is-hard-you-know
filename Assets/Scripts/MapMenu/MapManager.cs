@@ -22,8 +22,11 @@ public class MapManager : MonoBehaviour
 
     public int totalGames = 10;
     public int wonGames = 0;
+    public static bool result = false;
+    public GameObject resultsWindow;
 
     ////////// Map objects
+    public GameObject canvas;
     public GameObject player;
     public GameObject dangerSprite;
     public static GameObject dangerPopupsHolder;
@@ -113,6 +116,8 @@ public class MapManager : MonoBehaviour
 
         dangerPoints += activeEvents * Time.deltaTime *3;
 
+        if (dangerPoints > maximumDanger) { result = false; ResultWindow(result); }
+
         /////////// If playing mini game - stop until this point
         if (playingMiniGame) return;
 
@@ -176,6 +181,18 @@ public class MapManager : MonoBehaviour
 
             wonGames++;
             progressText.text = wonGames + " / " + totalGames;
+
+            if (wonGames == totalGames)
+            {
+                playingMiniGame = true; //folosit doar ca sa opreasca iteratia
+                GameObject canvas = dangerBar.transform.parent.gameObject;
+                foreach(Transform child in canvas.transform)
+                {
+                    child.gameObject.SetActive(false);
+                }
+                result = true;
+                ResultWindow(result);
+            }
 
             completedMiniGame = false;
         }
@@ -269,9 +286,52 @@ public class MapManager : MonoBehaviour
                 Vector3 pos = eventList[index].position;
                 pos.z = 0;
                 GameObject instance = Instantiate(dangerSprite, pos, new Quaternion(0, 0, 0, 0),dangerPopupsHolder.transform);
-                
                 return;
             }
         }
+    }
+
+    public void ResultWindow(bool result)
+    {
+        GameObject a = GameObject.Find("ResultWindow");
+        if ( a != null) return;
+        GameObject resWindow = Instantiate(resultsWindow, canvas.transform);
+        resWindow.name = "ResultWindow";
+        resWindow.transform.GetChild(0).transform.GetChild(0).GetComponent<Image>().fillAmount = (float)wonGames / totalGames;
+        if (result)
+        {
+            resWindow.transform.GetChild(1).GetComponent<Text>().text = "You Won!";
+            resWindow.transform.GetChild(2).gameObject.SetActive(true);
+            resWindow.transform.GetChild(4).transform.GetChild(0).GetComponent<Text>().text = "Main Menu";
+        }
+        else
+        {
+            resWindow.transform.GetChild(1).GetComponent<Text>().text = "Yet you were so close!";
+            resWindow.transform.GetChild(3).gameObject.SetActive(true);
+            resWindow.transform.GetChild(4).transform.GetChild(0).GetComponent<Text>().text = "Retry";
+        }
+    }
+
+    public void WindowButton()
+    {
+        if (result)
+        {
+            var objects = GameObject.FindObjectsOfType<GameObject>();
+            foreach (GameObject o in objects)
+            {
+                Destroy(o.gameObject);
+            }
+            SceneManager.LoadScene(0);//Load main menu
+        }
+        else
+        {
+            var objects = GameObject.FindObjectsOfType<GameObject>();
+            foreach (GameObject o in objects)
+            {
+                Destroy(o.gameObject);
+            }
+            SceneManager.LoadScene(0);//Reload same scene
+        }
+
     }
 }

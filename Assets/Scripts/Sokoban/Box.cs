@@ -7,11 +7,14 @@ public class Box : MonoBehaviour
     public bool m_OnCross;
     public GameObject go;
     public GameManager gm;
+    public Sprite valid;
+    private Sprite holder;
 
     void Start()
     {
         go = GameObject.Find("GameManager");
         gm = go.GetComponent<GameManager>();
+        holder = GetComponent<SpriteRenderer>().sprite;
     }
 
     public bool Move(Vector2 direction)
@@ -54,13 +57,14 @@ public class Box : MonoBehaviour
             if(transform.position.x == cross.transform.position.x && transform.position.y == cross.transform.position.y)
             {
                 gm.NumberOfCrosses--;
-                GetComponent<SpriteRenderer>().color = Color.red;
+                GetComponent<SpriteRenderer>().sprite = valid;
                 m_OnCross = true;
 
                 return;
             }
         }
-        GetComponent<SpriteRenderer>().color = Color.white;
+        GetComponent<SpriteRenderer>().sprite = holder;
+        Debug.Log(holder);
         if (m_OnCross == true)
         {
             gm.NumberOfCrosses++;

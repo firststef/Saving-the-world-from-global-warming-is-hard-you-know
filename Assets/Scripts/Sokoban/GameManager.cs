@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        if (NumberOfCrosses == 0)
+        if (NumberOfCrosses == 0 || Input.GetKeyDown(KeyCode.E))
         {
             SceneManager.LoadScene(0);
         }

@@ -405,7 +405,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 0 / 12
+  m_Text: 0 / 10
 --- !u!222 &380779507
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1402,8 +1402,11 @@ MonoBehaviour:
   dangerPoints: 0
   maximumDanger: 300
   EventTimer: 0
-  totalGames: 10
+  totalGames: 2
   wonGames: 0
+  resultsWindow: {fileID: 3385332449390305074, guid: 4b2e50f320e8e5947bff2245589a8b8a,
+    type: 3}
+  canvas: {fileID: 19598692}
   player: {fileID: 0}
   dangerSprite: {fileID: 5517759488706251784, guid: 8816f7d1670d38142be5ffcb13c0adee,
     type: 3}

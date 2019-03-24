@@ -225,10 +225,10 @@ public class MapManager : MonoBehaviour
     {
         Sprite spr = player.GetComponent<SpriteRenderer>().sprite;
         player.GetComponent<SpriteRenderer>().sprite = plane;
-
+        
         Vector3 dir = eventList[(int)location].position - transform.position;
-        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-        player.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+        float angle = Mathf.Atan2(dir.x, dir.y) * Mathf.Rad2Deg;
+        player.transform.rotation = Quaternion.AngleAxis(angle, Vector3.back);
 
         Vector3 start = player.transform.position;
         Vector3 dest = eventList[(int)location].position;

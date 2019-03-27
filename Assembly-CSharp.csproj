@@ -68,6 +68,9 @@
     <Compile Include="Assets\Scripts\BycicleLevel\CarMovement.cs" />
     <Compile Include="Assets\Scripts\FireLevel\FireController.cs" />
     <Compile Include="Assets\Scripts\FireLevel\PlayerController.cs" />
+    <Compile Include="Assets\Scripts\MainMenu\ButtonScript.cs" />
+    <Compile Include="Assets\Scripts\MainMenu\MusicManager.cs" />
+    <Compile Include="Assets\Scripts\MainMenu\SettingsMenu.cs" />
     <Compile Include="Assets\Scripts\MapMenu\HighlightScript.cs" />
     <Compile Include="Assets\Scripts\MapMenu\MapManager.cs" />
     <Compile Include="Assets\Scripts\Sokoban\Box.cs" />

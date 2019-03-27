@@ -13,7 +13,7 @@ public class LevelElement
 public class LevelBuilder : MonoBehaviour
 {
     public List<LevelElement> m_LevelElements;
-    private Level m_Level;
+    //private Level m_Level;
     private int LevelNumber;
     public GameManager gm;
     public Sprite valid;
@@ -26,10 +26,25 @@ public class LevelBuilder : MonoBehaviour
         else return null;
     }
 
-    public void Build()
+    public void Build(Level m_Level)
     {
-        LevelNumber = GetComponent<Levels>().m_Levels.Count;
-        m_Level = GetComponent<Levels>().m_Levels[(int)Random.Range(0,LevelNumber)];
+        //LevelNumber = GetComponent<Levels>().m_Levels.Count;
+        //m_Level = GetComponent<Levels>().m_Levels[(int)Random.Range(0,LevelNumber)];
+        gm.NumberOfCrosses = 0;
+
+        var walls = GameObject.FindGameObjectsWithTag("Wall");
+        var box = GameObject.FindGameObjectsWithTag("Box");
+        var pl = GameObject.FindGameObjectsWithTag("Player");
+        var cro = GameObject.FindGameObjectsWithTag("Cross");
+
+        foreach (GameObject item in walls)
+            Destroy(item);
+        foreach (GameObject item in box)
+            Destroy(item);
+        foreach (GameObject item in pl)
+            Destroy(item);
+        foreach (GameObject item in cro)
+            Destroy(item);
 
         int startx = -m_Level.Width / 2;
         int x = startx;

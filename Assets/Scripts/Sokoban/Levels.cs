@@ -47,7 +47,6 @@ public class Levels : MonoBehaviour
                 string line = lines[i];
                 if (line.StartsWith(";"))
                 {
-                    Debug.Log("New Level Added");
                     m_Levels.Add(new Level());
                     continue;
                 }

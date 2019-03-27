@@ -7,6 +7,9 @@ TagManager:
   - Box
   - Wall
   - Cross
+  - Canvas
+  - DangerPopupsHolder
+  - Music
   layers:
   - Default
   - TransparentFX

@@ -20,7 +20,7 @@ public class MapManager : MonoBehaviour
     public float maximumDanger = 300;
     public int EventTimer =0;
 
-    public int totalGames = 10;
+    private int totalGames = 10;
     public int wonGames = 0;
     public static bool result = false;
     public GameObject resultsWindow;
@@ -40,6 +40,7 @@ public class MapManager : MonoBehaviour
     public bool playingMiniGame = false;
     public bool completedMiniGame = false;
     private int LastGame = -1;
+    private int CurrentGame;
 
     [Serializable]
     public class Event
@@ -138,7 +139,6 @@ public class MapManager : MonoBehaviour
                 CreateRandomEvent(); activeEvents++;
             }
         }
-
         /////////// On-click - Move to mini-game
         if (Input.GetMouseButton(0) && HighlightName != null && !IsClicked)
         {
@@ -226,7 +226,7 @@ public class MapManager : MonoBehaviour
         Sprite spr = player.GetComponent<SpriteRenderer>().sprite;
         player.GetComponent<SpriteRenderer>().sprite = plane;
         
-        Vector3 dir = eventList[(int)location].position - transform.position;
+        Vector3 dir = eventList[(int)location].position - player.transform.position;
         float angle = Mathf.Atan2(dir.x, dir.y) * Mathf.Rad2Deg;
         player.transform.rotation = Quaternion.AngleAxis(angle, Vector3.back);
 
@@ -256,39 +256,29 @@ public class MapManager : MonoBehaviour
 
     int GetGameFromLocation()
     {
-        if (location == Continents.America) return 1;
-        if (location == Continents.Greenland) return 2;
-        return 1;
+        do
+        {
+            CurrentGame = (int)UnityEngine.Random.Range(2, 6);
+        } while (CurrentGame == LastGame);
+
+        LastGame = CurrentGame;
+
+        return CurrentGame;
     }
 
-    /*
-    private void MovePlayer()
-    {
-        Vector3 pos = eventList[(int)location].position;
-        pos.z = 0;
-        pos.y -= 0.06f;
-        player.transform.position = pos;
-    }
-    */
     void CreateRandomEvent()
     {
-        while (true)
-        {
-            int index = LastGame;
-            while (index == LastGame) //folosit ca sa nu fie jucat de 2 ori acelasi nivel consecutiv
+            int index;
+            do
             {
                 index = UnityEngine.Random.Range(0, 7);
             }
-            LastGame = index;
-            if (eventList[index].isActive == false)
-            {
-                eventList[index].isActive = true;
-                Vector3 pos = eventList[index].position;
-                pos.z = 0;
-                GameObject instance = Instantiate(dangerSprite, pos, new Quaternion(0, 0, 0, 0),dangerPopupsHolder.transform);
-                return;
-            }
-        }
+            while (eventList[index].isActive == true); //folosit ca sa nu fie jucat de 2 ori acelasi nivel consecutiv
+            
+            eventList[index].isActive = true;
+            Vector3 pos = eventList[index].position;
+            pos.z = 0;
+            GameObject instance = Instantiate(dangerSprite, pos, new Quaternion(0, 0, 0, 0),dangerPopupsHolder.transform);
     }
 
     public void ResultWindow(bool result)
@@ -330,7 +320,7 @@ public class MapManager : MonoBehaviour
             {
                 Destroy(o.gameObject);
             }
-            SceneManager.LoadScene(0);//Reload same scene
+            SceneManager.LoadScene(1);//Reload same scene
         }
 
     }

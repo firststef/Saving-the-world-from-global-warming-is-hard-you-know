@@ -56,7 +56,8 @@ public class Box : MonoBehaviour
         {
             if(transform.position.x == cross.transform.position.x && transform.position.y == cross.transform.position.y)
             {
-                gm.NumberOfCrosses--;
+                if(m_OnCross == false)
+                    gm.NumberOfCrosses--;
                 GetComponent<SpriteRenderer>().sprite = valid;
                 m_OnCross = true;
 
@@ -64,7 +65,6 @@ public class Box : MonoBehaviour
             }
         }
         GetComponent<SpriteRenderer>().sprite = holder;
-        Debug.Log(holder);
         if (m_OnCross == true)
         {
             gm.NumberOfCrosses++;

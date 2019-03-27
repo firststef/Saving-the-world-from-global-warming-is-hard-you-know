@@ -6,11 +6,12 @@ using UnityEngine.SceneManagement;
 public class CarMovement : MonoBehaviour {
 
 	Rigidbody2D rb;
+    MapManager gameManagerMap;
 
-	[SerializeField]
+    [SerializeField]
 	float acceleration = 5f;
 	[SerializeField]
-	float steering = 5f;
+	float steering = 3f;
 	float steeringAmount, speed, direction;
 
     public bool HitCheckpoint;
@@ -19,6 +20,9 @@ public class CarMovement : MonoBehaviour {
 	void Start () {
 		rb = GetComponent<Rigidbody2D> ();
         HitCheckpoint = false;
+
+        gameManagerMap = GameObject.Find("GameManagerMap").GetComponent<MapManager>();
+        gameManagerMap.player.SetActive(false);
 
     }
 	
@@ -45,7 +49,12 @@ public class CarMovement : MonoBehaviour {
         {
             if(HitCheckpoint)
             {
-                SceneManager.LoadScene(0);
+                gameManagerMap.completedMiniGame = true;
+                gameManagerMap.playingMiniGame = false;
+                SceneManager.LoadScene(1);
+                gameManagerMap.player.SetActive(true);
+                MapManager.dangerPopupsHolder.SetActive(true);
+                gameManagerMap.gameProgress.SetActive(true);
             }
         }
     }

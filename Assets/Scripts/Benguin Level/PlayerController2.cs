@@ -107,7 +107,7 @@ public class PlayerController2 : MonoBehaviour
         {
             gameManagerMap.completedMiniGame = true;
             gameManagerMap.playingMiniGame = false;
-            SceneManager.LoadScene(0);
+            SceneManager.LoadScene(1);
             gameManagerMap.player.SetActive(true);
             gameManagerMap.gameProgress.SetActive(true);
             MapManager.dangerPopupsHolder.SetActive(true);

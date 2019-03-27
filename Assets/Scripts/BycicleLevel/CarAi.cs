@@ -8,7 +8,7 @@ public class CarAi : MonoBehaviour
     public GameObject player;
     public Vector3[] target;
     private int count;
-    public float speed;
+    private float speed = 0.5f;
     private int current = 0;
     private Rigidbody2D rb;
 
@@ -112,7 +112,7 @@ public class CarAi : MonoBehaviour
     {
         if (transform.position != target[current] && Vector3.Distance(transform.position, target[current]) > 0.03)
         {
-            pos = Vector3.MoveTowards(transform.position, target[current], speed * Time.deltaTime);
+            pos = Vector3.MoveTowards(transform.position, target[current], speed * 0.01f/*Time.deltaTime*/);
             rb.MovePosition(pos);
 
             Vector3 dir = target[(current + 1) % count] - transform.position;

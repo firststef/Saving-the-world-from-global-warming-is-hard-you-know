@@ -126,7 +126,7 @@ public class GameManager : MonoBehaviour
         tabMenuScript = GameObject.Find("TabMenu").GetComponent<TabMenuScript>();
 
         //////// GAME VARIABLES
-        InvokeRepeating("GameTimeUpdate", 0, 1);
+        InvokeRepeating("GameTimeUpdate", 0, 1); // de facut coroutine
         SetTimer();
         InvokeRepeating("DateIncrease", 0, TimePerBeat);
     }
@@ -137,6 +137,7 @@ public class GameManager : MonoBehaviour
         BudgetUpdate();
     }
 
+    /// Game Time
     public void GameTimeUpdate()
     {
         gameTime += 1;
@@ -166,6 +167,17 @@ public class GameManager : MonoBehaviour
     public void DateIncrease()
     {
         CurrentDate.day++; // de facut algoritm
+
+        bool isLeapYear = ((CurrentDate.year % 4 == 0) && (CurrentDate.year % 100 != 0)) || (CurrentDate.year % 400 == 0);
+        if (CurrentDate.day == 32 && CurrentDate.month == 12)
+        { CurrentDate.day = 1; CurrentDate.month = 1; CurrentDate.year++; }
+        else if (CurrentDate.day == 32 && (CurrentDate.month == 1 || CurrentDate.month == 3 || CurrentDate.month == 5 || CurrentDate.month == 7 || CurrentDate.month == 8 || CurrentDate.month == 10 ))
+        { CurrentDate.day = 1; CurrentDate.month++; }
+        else if (CurrentDate.day == 31 && (CurrentDate.month == 4 || CurrentDate.month == 6 || CurrentDate.month == 9 || CurrentDate.month == 11))
+        { CurrentDate.day = 1; CurrentDate.month++; }
+        else if ((CurrentDate.day == 29 && CurrentDate.month == 2 && !isLeapYear )|| (CurrentDate.day == 30 && CurrentDate.month == 2 && isLeapYear))
+        { CurrentDate.day = 1; CurrentDate.month++; }
+
         date.text = CurrentDate.day + "." + CurrentDate.month + "." + CurrentDate.year;
     }
 

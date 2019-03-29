@@ -127,7 +127,7 @@ public class MapManager : MonoBehaviour
         {
             EventTimer++;
             if (activeEvents == 0)
-                dangerPoints -= Time.deltaTime * 6;
+                dangerPoints -= Time.deltaTime * 4.5f;
             if (dangerPoints < 0) dangerPoints = 0;
         }
         else

@@ -9,6 +9,21 @@ EditorBuildSettings:
     path: 
     guid: 00000000000000000000000000000000
   - enabled: 1
-    path: Assets/Scenes/TestMap.unity
-    guid: 480b47a27b56ce443bf8df68e3a208b2
+    path: Assets/Scenes/MainMenu.unity
+    guid: cfd82d7c591371948be7f47d42567d48
+  - enabled: 1
+    path: Assets/Scenes/WorldMap.unity
+    guid: 027db794480033d418154656aacae92d
+  - enabled: 1
+    path: Assets/Scenes/PenguinLevel.unity
+    guid: bfcb313035260464f8241dfc02daa49d
+  - enabled: 1
+    path: Assets/Scenes/FireLevel.unity
+    guid: b43a68a0c0372bb4ca9b0fb54f5e3c04
+  - enabled: 1
+    path: Assets/Scenes/TotallyNotSokoban.unity
+    guid: 2d30427360f783144ac32c386763bd79
+  - enabled: 1
+    path: Assets/Scenes/BycicleLevel.unity
+    guid: f48f4c88de8f0da4eaa26dac4282ccec
   m_configObjects: {}

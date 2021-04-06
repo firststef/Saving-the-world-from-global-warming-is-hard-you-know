@@ -89,9 +89,11 @@ public class ObjectHolderScript : MonoBehaviour
                                     instance.transform.GetChild(0).GetComponent<Image>().sprite = tileu.picture;
                                 else
                                     instance.transform.GetChild(0).GetComponent<Image>().sprite = tileu.tile.sprite;
+                                return;
                             }
-                            if (tileu.tile == currentTileUpgrade && !foundNextUpgrade) foundNextUpgrade = true;
+                            
                         }
+                        if (tileu.tile == currentTileUpgrade && !foundNextUpgrade) foundNextUpgrade = true;
                     }
                 }
             }

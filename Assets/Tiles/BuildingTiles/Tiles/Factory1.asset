@@ -34,8 +34,15 @@ MonoBehaviour:
   m_InstancedGameObject: {fileID: 0}
   m_Flags: 1
   m_ColliderType: 1
+  displayName: 
   zPos: 6
-  type: 2
+  type: 3
+  description: 
   polutionNumber: 4
   revenueNumber: 5
   costForAction: 20
+  button1: 
+  demands1: []
+  button2: 
+  demands2: []
+  button3: 

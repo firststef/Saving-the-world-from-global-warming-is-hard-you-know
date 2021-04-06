@@ -1,4 +1,5 @@
 sceneSetups:
-- path: Assets/Scenes/TestMap.unity
+- path: Assets/Scenes/CampaignMode.unity
   isLoaded: 1
   isActive: 1
+  isSubScene: 0

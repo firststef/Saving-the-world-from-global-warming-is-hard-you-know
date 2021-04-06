@@ -27,6 +27,7 @@ namespace UnityEngine.Tilemaps
         {
             Undefined,
             Ground,
+            BuildZone,
             Construction,
             Event,
             Opportunity //am nevoie de oportunity pentru a sti sa nu instantiez tile-ul in event database si sa il sterg dupa fara adresa dar sunt acelasi lucru in mare
@@ -215,6 +216,7 @@ namespace UnityEngine.Tilemaps
                         break;
                     }
                 case CustomTile.Type.Event:
+                case CustomTile.Type.Opportunity:
                     {
                         //////// Button1
 

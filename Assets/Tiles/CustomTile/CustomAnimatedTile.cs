@@ -112,6 +112,7 @@ namespace UnityEngine.Tilemaps
                         break;
                     }
                 case CustomTile.Type.Event:
+                case CustomTile.Type.Opportunity:
                     {
                         //////// Button1
 

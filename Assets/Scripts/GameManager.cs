@@ -72,7 +72,7 @@ public class GameManager : MonoBehaviour
     public bool DragIsEnabled = true;
 
     private TabMenuScript tabMenuScript;
-
+    public CustomTile buildZoneTile;
     //////////////////////////////////////////////////// GAME STATES
     public int currentAction = 1;
     /*
@@ -135,6 +135,8 @@ public class GameManager : MonoBehaviour
     {
         PolutionUpdate();
         BudgetUpdate();
+
+
     }
 
     /// Game Time
@@ -225,7 +227,9 @@ public class GameManager : MonoBehaviour
                 break;
             case 2:
                 {
-                    if (tileAbove.type == CustomTile.Type.Ground && selectedConstruction != null)
+                    CustomTile tileAbove2 = ReturnTileAbove(cell, 1);
+                    if (((tileAbove == buildZoneTile ) && (tileAbove2.type == CustomTile.Type.Ground) && (selectedConstruction != null))
+                        ||( (selectedConstruction.displayName == "Pole" ) && IsPoleNearCity(cell) && (tileAbove.type == CustomTile.Type.Ground)))
                     {
                         if (Budget >= selectedConstruction.costForAction) //poate verificarea ar trebui sa fie facute de CustomTile
                         {
@@ -236,6 +240,8 @@ public class GameManager : MonoBehaviour
 
                             //lets the tile do something specific at instantiation
                             selectedConstruction.OnInstantiate(new Vector3Int(cell.x, cell.y, selectedConstruction.zPos));
+
+                            tabMenuScript.ShowBuildZone();
                         }
                         else
                         {
@@ -246,10 +252,10 @@ public class GameManager : MonoBehaviour
                 }
             case 3:
                 {
-                    if (tileAbove.type == CustomTile.Type.Construction)
+                    if ((tileAbove.type == CustomTile.Type.Construction) && (tileAbove.displayName != "City"))
                     {
                         //lets the tile do something before it destroyed
-                        tileAbove.OnDelete(cell);
+                        tileAbove.OnDelete(new Vector3Int(cell.x, cell.y, 6));
 
                         //sets and delogs in the database
                         tilemap.SetTile(new Vector3Int(cell.x, cell.y, 6), null); //shoul create return first height
@@ -270,6 +276,32 @@ public class GameManager : MonoBehaviour
                     break;
                 }
         }
+    }
+
+    public bool IsPoleNearCity(Vector3Int cell)
+    {
+        foreach (GameManager.DatabaseItemBase baseItem in tileDatabase)
+        {
+            if ((baseItem.tile.displayName != "City") && (baseItem.tile.displayName != "Pole")) continue;
+
+            foreach (Vector3Int location in baseItem.locations)
+            {
+                if ((cell.x - location.x) * (cell.x - location.x) + (cell.y - location.y) * (cell.y - location.y) < 26)
+                    return true;
+            }
+
+            foreach (GameManager.DatabaseItem item in baseItem.upgrades)
+            {
+                if ((baseItem.tile.displayName != "City") && (baseItem.tile.displayName != "Pole")) continue;
+
+                foreach (Vector3Int location in item.locations)
+                {
+                    if ((cell.x - location.x) * (cell.x - location.x) + (cell.y - location.y) * (cell.y - location.y) < 26)
+                        return true;
+                }
+            }
+        }
+        return false;
     }
 
     public void selectUpgrade(CustomTile upgrade)

@@ -7,7 +7,7 @@ namespace UnityEditor
 {
     [CustomGridBrush(true, false, false, "Custom Brush")]
     [CreateAssetMenu(fileName = "New Custom Brush", menuName = "Brushes/Custom Brush")]
-    public class CustomBrush : GridBrush
+    public class CustomBrush : UnityEditor.Tilemaps.GridBrush
     { 
         public CustomTile customTile;
         public int z = 0;
@@ -55,7 +55,7 @@ namespace UnityEditor
     }
 
     [CustomEditor(typeof(CustomBrush))]
-    public class CustomBrushEditor : GridBrushEditor
+    public class CustomBrushEditor : UnityEditor.Tilemaps.GridBrushEditor
     {
         private CustomBrush customBrush { get { return target as CustomBrush; } }
         private Tilemap tilemap;

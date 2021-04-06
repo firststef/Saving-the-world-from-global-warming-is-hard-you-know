@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.UI;
+
+using TMPro;
 
 public class TabMenuScript : MonoBehaviour
 {
@@ -24,6 +25,8 @@ public class TabMenuScript : MonoBehaviour
 
     private int reset = 0;
 
+    int buildZoneHeight = 4;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -38,6 +41,7 @@ public class TabMenuScript : MonoBehaviour
 
     private void resetButtons()
     {
+        EraseBuildZone();
         reset = 0;
 #pragma warning disable CS0618 // Type or member is obsolete
         SetTransparent(requirementsTab.transform, 0);
@@ -73,6 +77,7 @@ public class TabMenuScript : MonoBehaviour
         SetTransparent(buildTab.transform, 1);
 #pragma warning restore CS0618 // Type or member is obsolete
         buildButton.GetComponent<Button>().interactable = false;
+        ShowBuildZone();
     }
 
     public void selectDestroy()
@@ -150,6 +155,157 @@ public class TabMenuScript : MonoBehaviour
         {
             transform.gameObject.GetComponent<CanvasGroup>().interactable = true;
             transform.gameObject.GetComponent<CanvasGroup>().blocksRaycasts = true;
+        }
+    }
+
+    public void ShowBuildZone()
+    {
+        foreach (GameManager.DatabaseItemBase baseItem in gameManager.tileDatabase)
+        {
+            if ((baseItem.tile.displayName != "City")&& (baseItem.tile.displayName != "Pole")) continue;
+
+            foreach (Vector3Int location in baseItem.locations)
+            {
+                ShowSurroundingBuildZone(location);
+            }
+
+            foreach(GameManager.DatabaseItem item in baseItem.upgrades)
+            {
+                if ((baseItem.tile.displayName != "City")&& (baseItem.tile.displayName != "Pole")) continue;
+
+                foreach (Vector3Int location in item.locations)
+                {
+                    ShowSurroundingBuildZone(location);
+                }
+            }
+        }
+    }
+
+    public void ShowSurroundingBuildZone(Vector3Int cell)
+    {
+        if (cell.y % 2 == 0)
+        {
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x , cell.y, buildZoneHeight), gameManager.selectionTile);;
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x - 1, cell.y, buildZoneHeight), gameManager.buildZoneTile);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x - 1, cell.y + 1, buildZoneHeight), gameManager.buildZoneTile);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x, cell.y + 1, buildZoneHeight), gameManager.buildZoneTile);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x + 1, cell.y, buildZoneHeight), gameManager.buildZoneTile);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x, cell.y - 1, buildZoneHeight), gameManager.buildZoneTile);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x - 1, cell.y - 1, buildZoneHeight), gameManager.buildZoneTile);
+
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x - 1, cell.y + 2, buildZoneHeight), gameManager.buildZoneTile);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x - 0, cell.y + 2, buildZoneHeight), gameManager.buildZoneTile);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x + 1, cell.y + 2, buildZoneHeight), gameManager.buildZoneTile);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x + 1, cell.y + 1, buildZoneHeight), gameManager.buildZoneTile);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x + 2, cell.y, buildZoneHeight), gameManager.buildZoneTile);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x + 1, cell.y - 1, buildZoneHeight), gameManager.buildZoneTile);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x + 1, cell.y - 2, buildZoneHeight), gameManager.buildZoneTile);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x, cell.y - 2, buildZoneHeight), gameManager.buildZoneTile);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x - 1, cell.y - 2, buildZoneHeight), gameManager.buildZoneTile);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x - 2, cell.y - 1, buildZoneHeight), gameManager.buildZoneTile);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x - 2, cell.y + 0, buildZoneHeight), gameManager.buildZoneTile);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x - 2, cell.y + 1, buildZoneHeight), gameManager.buildZoneTile);
+        }
+        else
+        {
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x, cell.y, buildZoneHeight), gameManager.buildZoneTile);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x - 1, cell.y + 2, buildZoneHeight), gameManager.buildZoneTile);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x - 0, cell.y + 2, buildZoneHeight), gameManager.buildZoneTile);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x + 1, cell.y + 2, buildZoneHeight), gameManager.buildZoneTile);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x - 1, cell.y + 1, buildZoneHeight), gameManager.buildZoneTile);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x , cell.y + 1, buildZoneHeight), gameManager.buildZoneTile);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x + 1, cell.y + 1, buildZoneHeight), gameManager.buildZoneTile);
+
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x + 2, cell.y + 1, buildZoneHeight), gameManager.buildZoneTile);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x - 2, cell.y + 0, buildZoneHeight), gameManager.buildZoneTile);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x - 1, cell.y , buildZoneHeight), gameManager.buildZoneTile);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x + 1, cell.y , buildZoneHeight), gameManager.buildZoneTile);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x + 2, cell.y, buildZoneHeight), gameManager.buildZoneTile);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x - 1, cell.y - 1, buildZoneHeight), gameManager.buildZoneTile);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x , cell.y - 1, buildZoneHeight), gameManager.buildZoneTile);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x + 1, cell.y - 1, buildZoneHeight), gameManager.buildZoneTile);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x + 2, cell.y - 1, buildZoneHeight), gameManager.buildZoneTile);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x - 1, cell.y - 2, buildZoneHeight), gameManager.buildZoneTile);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x , cell.y -2, buildZoneHeight), gameManager.buildZoneTile);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x +1, cell.y -2, buildZoneHeight), gameManager.buildZoneTile);
+        }
+
+        return;
+
+    }
+
+    public void EraseSurroundingBuildZone(Vector3Int cell)
+    {
+        if (cell.y % 2 == 0)
+        {
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x, cell.y, buildZoneHeight),null);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x - 1, cell.y, buildZoneHeight), null);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x - 1, cell.y + 1, buildZoneHeight), null);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x, cell.y + 1, buildZoneHeight), null);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x + 1, cell.y, buildZoneHeight), null);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x, cell.y - 1, buildZoneHeight), null);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x - 1, cell.y - 1, buildZoneHeight), null);
+
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x - 1, cell.y + 2, buildZoneHeight), null);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x - 0, cell.y + 2, buildZoneHeight), null);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x + 1, cell.y + 2, buildZoneHeight), null);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x + 1, cell.y + 1, buildZoneHeight), null);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x + 2, cell.y, buildZoneHeight), null);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x + 1, cell.y - 1, buildZoneHeight), null);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x + 1, cell.y - 2, buildZoneHeight), null);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x, cell.y - 2, buildZoneHeight), null);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x - 1, cell.y - 2, buildZoneHeight), null);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x - 2, cell.y - 1, buildZoneHeight), null);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x - 2, cell.y + 0, buildZoneHeight), null);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x - 2, cell.y + 1, buildZoneHeight), null);
+        }
+        else
+        {
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x, cell.y, buildZoneHeight), null);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x - 1, cell.y + 2, buildZoneHeight), null);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x - 0, cell.y + 2, buildZoneHeight), null);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x + 1, cell.y + 2, buildZoneHeight), null);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x - 1, cell.y + 1, buildZoneHeight), null);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x, cell.y + 1, buildZoneHeight), null);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x + 1, cell.y + 1, buildZoneHeight), null);
+
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x + 2, cell.y + 1, buildZoneHeight), null);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x - 2, cell.y + 0, buildZoneHeight), null);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x - 1, cell.y, buildZoneHeight), null);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x + 1, cell.y, buildZoneHeight), null);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x + 2, cell.y, buildZoneHeight), null);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x - 1, cell.y - 1, buildZoneHeight), null);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x, cell.y - 1, buildZoneHeight), null);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x + 1, cell.y - 1, buildZoneHeight), null);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x + 2, cell.y - 1, buildZoneHeight), null);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x - 1, cell.y - 2, buildZoneHeight), null);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x, cell.y - 2, buildZoneHeight), null);
+            gameManager.tilemap.SetTile(new Vector3Int(cell.x + 1, cell.y - 2, buildZoneHeight), null);
+        }
+
+        return;
+    }
+
+    public void EraseBuildZone()
+    {
+        foreach (GameManager.DatabaseItemBase baseItem in gameManager.tileDatabase)
+        {
+            if ((baseItem.tile.displayName != "City") && (baseItem.tile.displayName != "Pole")) continue;
+
+            foreach (Vector3Int location in baseItem.locations)
+            {
+                EraseSurroundingBuildZone(location);
+            }
+
+            foreach (GameManager.DatabaseItem item in baseItem.upgrades)
+            {
+                if ((baseItem.tile.displayName != "City") && (baseItem.tile.displayName != "Pole")) continue;
+
+                foreach (Vector3Int location in item.locations)
+                {
+                    EraseSurroundingBuildZone(location);
+                }
+            }
         }
     }
 }
